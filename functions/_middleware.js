@@ -301,6 +301,64 @@ export async function onRequest(context) {
   const method = request.method.toUpperCase();
   const url = new URL(request.url);
 
+   // ===== 网站访问密码保护（不影响后台和API） =====
+  const pathname = url.pathname;
+
+  // 排除后台和接口
+  const isExcluded =
+    pathname.startsWith('/admin') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/favicon') ||
+    pathname.startsWith('/assets');
+
+  // 网站密码保护
+if (!isExcluded && env.SITE_PASSWORD_ENABLED === "true") {
+
+  const cookie = request.headers.get("Cookie");
+
+  // 已验证，直接进入网站
+  if (!cookie || !cookie.includes("site_access_v2=true")) {
+
+    // 提交密码
+    if (request.method === "POST") {
+
+      const form = await request.formData();
+      const pwd = form.get("password");
+
+      if (pwd === env.SITE_PASSWORD) {
+
+        return new Response(null, {
+          status: 302,
+          headers: {
+            "Location": url.pathname,
+            "Set-Cookie":
+              "site_access_v2=true; Path=/; HttpOnly; Secure; SameSite=Lax"
+          }
+        });
+
+      } else {
+
+        return new Response(loginPage("密码错误，请重试"), {
+          status:200,
+          headers:{
+            "Content-Type":"text/html;charset=UTF-8"
+          }
+        });
+
+      }
+    }
+ // ===== 网站密码保护结束 =====
+
+    return new Response(loginPage(""), {
+      status:200,
+      headers:{
+        "Content-Type":"text/html;charset=UTF-8"
+      }
+    });
+
+  }
+}
+
   // Schema 迁移：首页 GET 留给 index.js 里与 KV/DB 读并行执行，避免在 HIT 路径上多一次串行 KV；
   // 其余路径（所有写操作、管理 API、admin 页面等）保留串行 await 以保证 DDL 就绪。
   if (env.NAV_DB) {
@@ -327,4 +385,98 @@ export async function onRequest(context) {
   }
 
   return context.next();
+}
+
+function loginPage(msg){
+
+return `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>网站访问</title>
+
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+background:#f3f4f6;
+font-family:Arial;
+}
+
+.box{
+width:360px;
+padding:35px;
+background:white;
+border-radius:16px;
+box-shadow:0 10px 30px #0002;
+text-align:center;
+}
+
+.icon{
+font-size:45px;
+}
+
+input{
+width:90%;
+padding:12px;
+margin-top:20px;
+border:1px solid #ddd;
+border-radius:8px;
+font-size:16px;
+}
+
+button{
+width:95%;
+margin-top:20px;
+padding:12px;
+border:0;
+border-radius:8px;
+background:#2563eb;
+color:white;
+font-size:16px;
+}
+
+.error{
+color:red;
+margin-top:15px;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<div class="icon">🔒</div>
+
+<h2>网站访问验证</h2>
+
+<form method="POST">
+
+<input 
+type="password"
+name="password"
+placeholder="请输入访问密码">
+
+<button>
+进入网站
+</button>
+
+</form>
+
+<div class="error">
+${msg}
+</div>
+
+</div>
+
+</body>
+</html>
+`;
+
 }
