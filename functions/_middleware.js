@@ -312,7 +312,7 @@ export async function onRequest(context) {
     pathname.startsWith('/assets');
 
   // 网站密码保护
-if (!isExcluded && env.SITE_PASSWORD_ENABLED === "true") {
+if (!isExcluded && String(env.SITE_PASSWORD_ENABLED).toLowerCase() === "true") {
 
   const cookie = request.headers.get("Cookie");
 
