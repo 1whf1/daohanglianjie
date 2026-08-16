@@ -308,6 +308,8 @@ export async function onRequest(context) {
   const isExcluded =
     pathname.startsWith('/admin') ||
     pathname.startsWith('/api') ||
+    pathname.startsWith('/css/') ||
+    pathname.startsWith('/js/') ||
     pathname.startsWith('/favicon') ||
     pathname.startsWith('/assets');
 
