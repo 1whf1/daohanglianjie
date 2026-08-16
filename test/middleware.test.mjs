@@ -7,6 +7,7 @@ import {
   clearHomeCache,
   getSessionToken,
   isAdminAuthenticated,
+  onRequest,
   validateCsrfToken,
   validateOrigin,
 } from '../functions/_middleware.js';
@@ -114,6 +115,29 @@ test('validateOrigin only accepts same-host Origin or Referer headers', () => {
     headers: { Origin: 'https://evil.example' },
   })), false);
   assert.equal(validateOrigin(new Request('https://example.com/api/config/submit')), false);
+});
+
+test('site password protection leaves admin static assets reachable', async () => {
+  const env = { SITE_PASSWORD_ENABLED: 'true', SITE_PASSWORD: 'secret' };
+  const next = async () => new Response('asset reached', { status: 200 });
+
+  for (const pathname of ['/css/admin-layout.css', '/js/admin.js']) {
+    const response = await onRequest({
+      request: new Request(`https://example.com${pathname}`),
+      env,
+      next,
+    });
+    assert.equal(response.status, 200);
+    assert.equal(await response.text(), 'asset reached');
+  }
+
+  const homeResponse = await onRequest({
+    request: new Request('https://example.com/'),
+    env,
+    next,
+  });
+  assert.equal(homeResponse.status, 200);
+  assert.match(await homeResponse.text(), /网站访问验证/);
 });
 
 test('checkRateLimit increments counts and blocks after the limit', async () => {
