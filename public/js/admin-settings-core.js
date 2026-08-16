@@ -208,6 +208,12 @@
         refs.rainDropSizeValue.textContent = refs.rainDropSizeRange.value;
       }
     });
+
+    refs.rainDensityRange?.addEventListener('input', () => {
+      if (refs.rainDensityValue) {
+        refs.rainDensityValue.textContent = refs.rainDensityRange.value;
+      }
+    });
   }
 
   function initAutofillGuards(refs) {
