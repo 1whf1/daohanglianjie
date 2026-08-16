@@ -357,6 +357,10 @@ export async function onRequest(context) {
     </div>`;
 
   // === 15. 布局控制 ===
+  const rainEffectAvailable = Boolean(
+    S.layout_enable_rain_effect
+      && (S.layout_card_style === 'style1' || S.mobile_layout_card_style === 'style1')
+  );
   let sidebarClass = '';
   let mainClass = 'lg:ml-64';
   let sidebarToggleClass = '';
@@ -367,6 +371,10 @@ export async function onRequest(context) {
       <svg id="themeIconSun" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="block dark:hidden"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg>
       <svg id="themeIconMoon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
     </button>`;
+  const rainToggleHtml = rainEffectAvailable ? `
+    <button id="rainToggleBtn" class="top-action-icon rain-action-icon" title="切换下雨效果" aria-label="切换下雨效果" aria-pressed="true">
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16.5a4.5 4.5 0 0 1 .9-8.91A5.5 5.5 0 0 1 18.5 9a3.5 3.5 0 0 1-.5 7H7Z"/><path d="m8 19-1 2M12 18.5l-1 2M16 19l-1 2"/></svg>
+    </button>` : '';
 
   let headerContent = verticalHeaderContent;
 
@@ -388,7 +396,7 @@ export async function onRequest(context) {
       <div class="hidden min-[550px]:block">${horizontalHeaderContent}</div>`;
   }
 
-  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${themeIconHtml}${adminIconHtml}</div>`;
+  const topRightActionsHtml = `<div class="fixed top-4 right-4 z-50 flex items-center gap-3">${themeIconHtml}${rainToggleHtml}${adminIconHtml}</div>`;
   const leftTopActionHtml = `
     <div class="fixed top-4 left-4 z-50 ${mobileToggleVisibilityClass}">
       <button id="sidebarToggle" class="p-2 rounded-lg bg-white dark:bg-gray-800 shadow-md hover:bg-gray-100 dark:hover:bg-gray-700">
@@ -520,9 +528,16 @@ export async function onRequest(context) {
     cardStyle: S.layout_card_style,
     cardAnimation: S.layout_card_animation,
     enableFrostedGlass: S.layout_enable_frosted_glass,
+    rainEffectAvailable,
     rememberLastCategory: S.home_remember_last_category,
     // 当前 SSR 已渲染的分类（用于前端 Auto-restore 判断是否可跳过重绘）
     ssrCatalogId: catalogExists ? requestedCatalogId : 'all',
+  }).replace(/</g, '\\u003c');
+  const safeRainConfigJson = JSON.stringify({
+    available: rainEffectAvailable,
+    desktopStyle: S.layout_card_style,
+    mobileStyle: S.mobile_layout_card_style,
+    defaultEnabled: true,
   }).replace(/</g, '\\u003c');
 
   // --- 一次性替换 </head> ---
@@ -549,7 +564,7 @@ export async function onRequest(context) {
   } else {
     html = html.replace(
       mainJsMarker,
-      () => `<script>window.IORI_SITES=${safeSitesJson};window.IORI_CARD_CONFIG=${safeCardConfigJson};window.IORI_CARD_CONFIGS=${safeCardConfigsJson};window.IORI_LAYOUT_CONFIG=${safeLayoutConfigJson};</script>\n  ${mainJsMarker}`
+      () => `<script>window.IORI_SITES=${safeSitesJson};window.IORI_CARD_CONFIG=${safeCardConfigJson};window.IORI_CARD_CONFIGS=${safeCardConfigsJson};window.IORI_LAYOUT_CONFIG=${safeLayoutConfigJson};window.IORI_RAIN_CONFIG=${safeRainConfigJson};</script>\n  ${mainJsMarker}`
     );
   }
 
