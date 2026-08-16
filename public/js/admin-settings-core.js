@@ -163,9 +163,14 @@
       saveSettings();
     });
 
-    refs.frostedGlassSwitch?.addEventListener('change', () => {
-      ns.form?.updateToggleContainer?.(refs.frostedGlassSwitch, 'frostedGlassIntensityContainer');
-    });
+    const updateDesktopFrostedIntensityState = () => {
+      ns.form?.updateToggleContainer?.(
+        [refs.frostedGlassSwitch, refs.searchFrostedGlassSwitch],
+        'frostedGlassIntensityContainer'
+      );
+    };
+    refs.frostedGlassSwitch?.addEventListener('change', updateDesktopFrostedIntensityState);
+    refs.searchFrostedGlassSwitch?.addEventListener('change', updateDesktopFrostedIntensityState);
 
     refs.frostedGlassIntensityRange?.addEventListener('input', () => {
       if (refs.frostedGlassIntensityValue) {
@@ -183,9 +188,14 @@
       }
     });
 
-    refs.mobileFrostedGlassSwitch?.addEventListener('change', () => {
-      ns.form?.updateToggleContainer?.(refs.mobileFrostedGlassSwitch, 'mobileFrostedGlassIntensityContainer');
-    });
+    const updateMobileFrostedIntensityState = () => {
+      ns.form?.updateToggleContainer?.(
+        [refs.mobileFrostedGlassSwitch, refs.mobileSearchFrostedGlassSwitch],
+        'mobileFrostedGlassIntensityContainer'
+      );
+    };
+    refs.mobileFrostedGlassSwitch?.addEventListener('change', updateMobileFrostedIntensityState);
+    refs.mobileSearchFrostedGlassSwitch?.addEventListener('change', updateMobileFrostedIntensityState);
 
     refs.mobileFrostedGlassIntensityRange?.addEventListener('input', () => {
       if (refs.mobileFrostedGlassIntensityValue) {
