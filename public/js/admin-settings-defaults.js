@@ -147,6 +147,7 @@
       layout_card_animation: 'radial',
       layout_card_border_radius: '12',
       layout_enable_rain_effect: false,
+      layout_rain_drop_size: '12',
       card_title_font: '',
       card_title_size: '16',
       card_title_color: '',

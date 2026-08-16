@@ -943,13 +943,6 @@
                   </div>
                 </div>
 
-                <div id="rainEffectOption" class="card-option-row">
-                  <label for="rainEffectSwitch" class="card-option-label">风格一下雨效果</label>
-                  <label class="switch" title="雨滴会落在搜索框、分类标签和卡片上">
-                    <input type="checkbox" id="rainEffectSwitch">
-                    <span class="slider round"></span>
-                  </label>
-                </div>
               </div>
 
               <div id="previewWrapper" class="p-6 rounded-xl mb-4 overflow-hidden flex justify-center items-center"
@@ -1076,6 +1069,23 @@
                   <input type="checkbox" id="searchFrostedGlassSwitch">
                   <span class="slider round"></span>
                 </label>
+              </div>
+
+              <div id="rainEffectOption">
+                <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
+                  <label for="rainEffectSwitch"
+                    class="cursor-pointer select-none text-gray-700 font-medium">雨滴效果</label>
+                  <label class="switch" title="雨滴会落在搜索框、分类标签和卡片上">
+                    <input type="checkbox" id="rainEffectSwitch">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
+                <div class="p-2 hover:bg-gray-50 rounded" id="rainDropSizeContainer">
+                  <label for="rainDropSize" class="block text-gray-700 font-medium mb-1">雨滴大小: <span
+                      id="rainDropSizeValue">12</span>px</label>
+                  <input type="range" id="rainDropSize" min="8" max="32" step="1" value="12"
+                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
               </div>
 
               <div class="p-2 hover:bg-gray-50 rounded" id="frostedGlassIntensityContainer">
@@ -1739,15 +1749,15 @@
   <script src="/js/admin-bookmarks.js?v=2c52bc54"></script>
   <script src="/js/admin-batch.js?v=231f596e"></script>
   <script src="/js/wallpaper-defaults.js?v=7eebee6d"></script>
-  <script src="/js/admin-settings-defaults.js?v=064fed0d"></script>
-  <script src="/js/admin-settings-form.js?v=be0f8140"></script>
-  <script src="/js/admin-settings-core.js?v=d5761790"></script>
+  <script src="/js/admin-settings-defaults.js?v=e18c52f9"></script>
+  <script src="/js/admin-settings-form.js?v=e5ef00db"></script>
+  <script src="/js/admin-settings-core.js?v=df4d77a7"></script>
   <script src="/js/admin-settings-preview-shared.js?v=f036607b"></script>
   <script src="/js/admin-settings-preview-data.js?v=649b33cc"></script>
   <script src="/js/admin-settings-preview-nav.js?v=2fb2b1ca"></script>
   <script src="/js/admin-settings-preview-animation.js?v=f69111b6"></script>
   <script src="/js/admin-settings-preview-render.js?v=d34f94f7"></script>
-  <script src="/js/admin-settings-preview-controls.js?v=abddb8bf"></script>
+  <script src="/js/admin-settings-preview-controls.js?v=07858bc0"></script>
   <script src="/js/admin-settings-preview.js?v=20153112"></script>
   <script src="/js/admin-settings-wallpaper.js?v=e7168e1d"></script>
   <script src="/js/admin-settings-ai.js?v=cc131031"></script>

@@ -337,9 +337,9 @@ body.custom-wallpaper .admin-action-icon:hover {
 
 .rain-drop {
   position: fixed;
-  width: 1.5px;
-  height: 22px;
-  margin-left: -0.75px;
+  width: 2.4px;
+  height: 31px;
+  margin-left: -1.2px;
   border-radius: 999px;
   background: linear-gradient(to bottom, transparent, rgba(219, 239, 255, 0.95));
   filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.55));
@@ -350,9 +350,9 @@ body.custom-wallpaper .admin-action-icon:hover {
 
 .rain-splash {
   position: fixed;
-  width: 13px;
-  height: 6px;
-  margin: -3px 0 0 -6.5px;
+  width: 16px;
+  height: 7px;
+  margin: -3.5px 0 0 -8px;
   border: 1.5px solid rgba(224, 244, 255, 0.9);
   border-top-color: transparent;
   border-radius: 50%;
@@ -365,7 +365,7 @@ body.custom-wallpaper .admin-action-icon:hover {
   left: 50%;
   bottom: 1px;
   width: 2px;
-  height: 6px;
+  height: 7px;
   border-radius: 999px;
   background: rgba(224, 244, 255, 0.9);
   transform-origin: 50% 100%;

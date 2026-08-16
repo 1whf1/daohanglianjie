@@ -537,6 +537,7 @@ export async function onRequest(context) {
     available: rainEffectAvailable,
     desktopStyle: S.layout_card_style,
     mobileStyle: S.mobile_layout_card_style,
+    dropSize: normalizeCssPixelValue(S.layout_rain_drop_size, 12),
     defaultEnabled: true,
   }).replace(/</g, '\\u003c');
 
