@@ -240,6 +240,23 @@ test('home card radius and frosted blur preserve zero values', async () => {
   assert.match(html, /@media \(max-width: 767px\) \{ :root \{ --card-radius: 0px; --frosted-glass-blur: 0px; \} \}/);
 });
 
+test('search frosted glass follows device settings and leaves style three unchanged', async () => {
+  const enabledHtml = await renderHome([
+    { key: 'layout_enable_search_frosted_glass', value: 'true' },
+    { key: 'mobile_layout_enable_search_frosted_glass', value: 'true' },
+  ]);
+  const styleThreeHtml = await renderHome([
+    { key: 'layout_card_style', value: 'style3' },
+    { key: 'mobile_layout_card_style', value: 'style3' },
+    { key: 'layout_enable_search_frosted_glass', value: 'true' },
+    { key: 'mobile_layout_enable_search_frosted_glass', value: 'true' },
+  ]);
+
+  assert.match(enabledHtml, /search-input-target desktop-search-frosted-glass mobile-search-frosted-glass/);
+  assert.doesNotMatch(styleThreeHtml, /(?:desktop|mobile)-search-frosted-glass/);
+  assert.match(styleThreeHtml, /desktop-page-style3 mobile-page-style3/);
+});
+
 test('home category navigation can render at the top', async () => {
   const html = await renderHome([
     { key: 'home_category_position', value: 'top' },

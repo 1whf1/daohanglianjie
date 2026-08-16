@@ -132,6 +132,22 @@
   color: #9ca3af;
 }
 
+.home-live-preview:not(.uses-card-style-3) .search-input-target.search-frosted-glass-effect,
+.home-live-preview.has-wallpaper:not(.uses-card-style-3) .search-input-target.search-frosted-glass-effect {
+  background: rgba(255, 255, 255, 0.4) !important;
+  backdrop-filter: blur(var(--preview-frosted-blur, 15px)) !important;
+  -webkit-backdrop-filter: blur(var(--preview-frosted-blur, 15px)) !important;
+  border: 1px solid rgba(255, 255, 255, 0.6) !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+}
+
+.home-live-preview:not(.uses-card-style-3) .search-input-target.search-frosted-glass-effect:hover,
+.home-live-preview:not(.uses-card-style-3) .search-input-target.search-frosted-glass-effect:focus {
+  background: rgba(255, 255, 255, 0.6) !important;
+  border-color: rgba(255, 255, 255, 0.9) !important;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
 .live-category-nav {
   width: min(100%, 64rem); /* 与首页 max-w-5xl 一致 */
   min-width: 0;

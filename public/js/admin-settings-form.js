@@ -27,6 +27,7 @@
       hideCategorySwitch: document.getElementById('hideCategorySwitch'),
       hideAdminSwitch: document.getElementById('hideAdminSwitch'),
       frostedGlassSwitch: document.getElementById('frostedGlassSwitch'),
+      searchFrostedGlassSwitch: document.getElementById('searchFrostedGlassSwitch'),
       frostedGlassIntensityRange: document.getElementById('frostedGlassIntensity'),
       frostedGlassIntensityValue: document.getElementById('frostedGlassIntensityValue'),
       gridColsRadios: document.getElementsByName('gridCols'),
@@ -80,6 +81,7 @@
       mobileHideLinksSwitch: document.getElementById('mobileHideLinksSwitch'),
       mobileHideCategorySwitch: document.getElementById('mobileHideCategorySwitch'),
       mobileFrostedGlassSwitch: document.getElementById('mobileFrostedGlassSwitch'),
+      mobileSearchFrostedGlassSwitch: document.getElementById('mobileSearchFrostedGlassSwitch'),
       mobileFrostedGlassIntensityRange: document.getElementById('mobileFrostedGlassIntensity'),
       mobileFrostedGlassIntensityValue: document.getElementById('mobileFrostedGlassIntensityValue'),
       mobileGridColsRadios: document.getElementsByName('mobileGridCols'),
@@ -135,8 +137,9 @@
 
   function updateToggleContainer(switchElement, containerId) {
     const container = document.getElementById(containerId);
-    if (!container || !switchElement) return;
-    if (switchElement.checked) {
+    const switches = Array.isArray(switchElement) ? switchElement.filter(Boolean) : [switchElement].filter(Boolean);
+    if (!container || switches.length === 0) return;
+    if (switches.some(element => element.checked)) {
       container.classList.remove('opacity-50', 'pointer-events-none');
     } else {
       container.classList.add('opacity-50', 'pointer-events-none');
@@ -289,6 +292,7 @@
     }
 
     currentSettings.layout_enable_frosted_glass = !!refs.frostedGlassSwitch?.checked;
+    currentSettings.layout_enable_search_frosted_glass = !!refs.searchFrostedGlassSwitch?.checked;
     currentSettings.layout_frosted_glass_intensity = refs.frostedGlassIntensityRange?.value || '15';
     currentSettings.layout_card_style = document.querySelector('#desktopCardSettingsPanel .card-style-btn.active')?.dataset.style || 'style1';
     currentSettings.layout_card_animation = refs.cardAnimationSelect?.value || 'radial';
@@ -304,6 +308,7 @@
     currentSettings.mobile_layout_hide_links = !!refs.mobileHideLinksSwitch?.checked;
     currentSettings.mobile_layout_hide_category = !!refs.mobileHideCategorySwitch?.checked;
     currentSettings.mobile_layout_enable_frosted_glass = !!refs.mobileFrostedGlassSwitch?.checked;
+    currentSettings.mobile_layout_enable_search_frosted_glass = !!refs.mobileSearchFrostedGlassSwitch?.checked;
     currentSettings.mobile_layout_frosted_glass_intensity = refs.mobileFrostedGlassIntensityRange?.value || '15';
     for (const radio of refs.mobileGridColsRadios || []) {
       if (radio.checked) {
@@ -419,8 +424,9 @@
     setChecked(refs.homeRememberLastCategorySwitch, currentSettings.home_remember_last_category);
     setChecked(refs.searchEngineSwitch, currentSettings.home_search_engine_enabled);
     setChecked(refs.frostedGlassSwitch, currentSettings.layout_enable_frosted_glass);
+    setChecked(refs.searchFrostedGlassSwitch, currentSettings.layout_enable_search_frosted_glass);
     setRangeValue(refs.frostedGlassIntensityRange, refs.frostedGlassIntensityValue, currentSettings.layout_frosted_glass_intensity || '15');
-    updateToggleContainer(refs.frostedGlassSwitch, 'frostedGlassIntensityContainer');
+    updateToggleContainer([refs.frostedGlassSwitch, refs.searchFrostedGlassSwitch], 'frostedGlassIntensityContainer');
     setValue(refs.customWallpaperInput, currentSettings.layout_custom_wallpaper || '');
     if (refs.customWallpaperInput && !String(currentSettings.layout_custom_wallpaper || '').trim()) {
       const style = currentSettings.layout_card_style || 'style1';
@@ -454,8 +460,9 @@
     setChecked(refs.mobileHideLinksSwitch, currentSettings.mobile_layout_hide_links);
     setChecked(refs.mobileHideCategorySwitch, currentSettings.mobile_layout_hide_category);
     setChecked(refs.mobileFrostedGlassSwitch, currentSettings.mobile_layout_enable_frosted_glass);
+    setChecked(refs.mobileSearchFrostedGlassSwitch, currentSettings.mobile_layout_enable_search_frosted_glass);
     setRangeValue(refs.mobileFrostedGlassIntensityRange, refs.mobileFrostedGlassIntensityValue, currentSettings.mobile_layout_frosted_glass_intensity || '15');
-    updateToggleContainer(refs.mobileFrostedGlassSwitch, 'mobileFrostedGlassIntensityContainer');
+    updateToggleContainer([refs.mobileFrostedGlassSwitch, refs.mobileSearchFrostedGlassSwitch], 'mobileFrostedGlassIntensityContainer');
     setRadioValue(refs.mobileGridColsRadios, currentSettings.mobile_layout_grid_cols || '3');
     setValue(refs.mobileCardAnimationSelect, currentSettings.mobile_layout_card_animation || 'radial');
     setRangeValue(refs.mobileCardRadiusInput, refs.mobileCardRadiusValue, currentSettings.mobile_layout_card_border_radius || '12');

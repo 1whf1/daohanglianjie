@@ -41,6 +41,7 @@ export const SETTINGS_SCHEMA = {
     layout_menu_layout: { default: 'horizontal', type: 'string' },
     bing_country: { default: '', type: 'string' },
     layout_enable_frosted_glass: { default: false, type: 'bool' },
+    layout_enable_search_frosted_glass: { default: false, type: 'bool' },
     layout_frosted_glass_intensity: { default: '15', type: 'string' },
     layout_enable_bg_blur: { default: false, type: 'bool' },
     layout_bg_blur_intensity: { default: '0', type: 'string' },
@@ -51,6 +52,7 @@ export const SETTINGS_SCHEMA = {
     mobile_layout_hide_links: { default: true, type: 'bool' },
     mobile_layout_hide_category: { default: false, type: 'bool' },
     mobile_layout_enable_frosted_glass: { default: false, type: 'bool' },
+    mobile_layout_enable_search_frosted_glass: { default: false, type: 'bool' },
     mobile_layout_frosted_glass_intensity: { default: '15', type: 'string' },
     mobile_layout_grid_cols: { default: '3', type: 'string' },
     mobile_layout_card_style: { default: 'style2', type: 'string' },
@@ -327,6 +329,7 @@ export function parseSettings(dbResults) {
     const mobileFallbackKeys = [
         ['mobile_layout_hide_category', 'layout_hide_category'],
         ['mobile_layout_enable_frosted_glass', 'layout_enable_frosted_glass'],
+        ['mobile_layout_enable_search_frosted_glass', 'layout_enable_search_frosted_glass'],
         ['mobile_layout_frosted_glass_intensity', 'layout_frosted_glass_intensity'],
         ['mobile_layout_card_animation', 'layout_card_animation'],
         ['mobile_layout_card_border_radius', 'layout_card_border_radius'],

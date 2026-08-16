@@ -6,16 +6,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>书签管理页面</title>
   <link rel="icon" href="/favicon.svg?v=148aafdf" type="image/svg+xml">
-  <link rel="stylesheet" href="/css/admin-layout.css?v=42e6c65a" />
-  <link rel="stylesheet" href="/css/admin-forms.css?v=ffc88cf4" />
-  <link rel="stylesheet" href="/css/admin-card-options.css?v=55b9995c" />
-  <link rel="stylesheet" href="/css/admin-preview-shell.css?v=82413550" />
-  <link rel="stylesheet" href="/css/admin-preview-controls.css?v=7fa6812c" />
-  <link rel="stylesheet" href="/css/admin-preview-cards.css?v=d0d0a9b0" />
-  <link rel="stylesheet" href="/css/admin-settings-modal.css?v=aa21a839" />
-  <link rel="stylesheet" href="/css/admin-card-preview.css?v=ebc1ba0a" />
-  <link rel="stylesheet" href="/css/admin-feedback.css?v=15b4dada" />
-  <link rel="stylesheet" href="/css/admin-dropdown.css?v=9efddb85" />
+  <link rel="stylesheet" href="/css/admin-layout.css?v=768f9ade" />
+  <link rel="stylesheet" href="/css/admin-forms.css?v=d3e66934" />
+  <link rel="stylesheet" href="/css/admin-card-options.css?v=32c2dfc2" />
+  <link rel="stylesheet" href="/css/admin-preview-shell.css?v=dd018be2" />
+  <link rel="stylesheet" href="/css/admin-preview-controls.css?v=115b7158" />
+  <link rel="stylesheet" href="/css/admin-preview-cards.css?v=ec41ebfe" />
+  <link rel="stylesheet" href="/css/admin-settings-modal.css?v=4834a690" />
+  <link rel="stylesheet" href="/css/admin-card-preview.css?v=844c2ebb" />
+  <link rel="stylesheet" href="/css/admin-feedback.css?v=7f73bd85" />
+  <link rel="stylesheet" href="/css/admin-dropdown.css?v=a8270a59" />
   <link rel="stylesheet" href="/css/tailwind.min.css?v=38e0a016">
 </head>
 
@@ -1061,8 +1061,17 @@
                 </label>
               </div>
 
+              <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
+                <label for="searchFrostedGlassSwitch"
+                  class="cursor-pointer select-none text-gray-700 font-medium">搜索栏毛玻璃效果</label>
+                <label class="switch">
+                  <input type="checkbox" id="searchFrostedGlassSwitch">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+
               <div class="p-2 hover:bg-gray-50 rounded" id="frostedGlassIntensityContainer">
-                <label for="frostedGlassIntensity" class="block text-gray-700 font-medium mb-1">毛玻璃模糊程度: <span
+                <label for="frostedGlassIntensity" class="block text-gray-700 font-medium mb-1">卡片/搜索栏模糊程度: <span
                     id="frostedGlassIntensityValue">15</span>px</label>
                 <input type="range" id="frostedGlassIntensity" min="0" max="50" step="1"
                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
@@ -1224,8 +1233,17 @@
                   <span class="slider round"></span>
                 </label>
               </div>
+
+              <div class="flex items-center justify-between p-2 hover:bg-gray-50 rounded">
+                <label for="mobileSearchFrostedGlassSwitch"
+                  class="cursor-pointer select-none text-gray-700 font-medium">搜索栏毛玻璃效果</label>
+                <label class="switch">
+                  <input type="checkbox" id="mobileSearchFrostedGlassSwitch">
+                  <span class="slider round"></span>
+                </label>
+              </div>
               <div class="p-2 hover:bg-gray-50 rounded" id="mobileFrostedGlassIntensityContainer">
-                <label for="mobileFrostedGlassIntensity" class="block text-gray-700 font-medium mb-1">毛玻璃模糊程度: <span
+                <label for="mobileFrostedGlassIntensity" class="block text-gray-700 font-medium mb-1">卡片/搜索栏模糊程度: <span
                     id="mobileFrostedGlassIntensityValue">15</span>px</label>
                 <input type="range" id="mobileFrostedGlassIntensity" min="0" max="50" step="1"
                   class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
@@ -1702,33 +1720,33 @@
     </div>
   </div>
 
-  <script src="/js/admin-shared.js?v=bb97f086"></script>
-  <script src="/js/admin-cache.js?v=7b8faa7b"></script>
-  <script src="/js/admin-bookmark-list.js?v=d6db3383"></script>
-  <script src="/js/admin-pending.js?v=2482c2ea"></script>
-  <script src="/js/admin-tabs.js?v=fd9a0d73"></script>
-  <script src="/js/admin-bookmark-privacy.js?v=306f5fdb"></script>
-  <script src="/js/admin.js?v=39f7ce60"></script>
-  <script src="/js/admin-categories.js?v=aa436f47"></script>
-  <script src="/js/admin-bookmarks.js?v=050f96b1"></script>
-  <script src="/js/admin-batch.js?v=30d922a5"></script>
-  <script src="/js/wallpaper-defaults.js?v=b65f42d1"></script>
-  <script src="/js/admin-settings-defaults.js?v=703e8e12"></script>
-  <script src="/js/admin-settings-form.js?v=a90b9ea0"></script>
-  <script src="/js/admin-settings-core.js?v=db242f68"></script>
-  <script src="/js/admin-settings-preview-shared.js?v=3d0c2bf4"></script>
-  <script src="/js/admin-settings-preview-data.js?v=3eddb596"></script>
-  <script src="/js/admin-settings-preview-nav.js?v=bb83f239"></script>
-  <script src="/js/admin-settings-preview-animation.js?v=caa22fec"></script>
-  <script src="/js/admin-settings-preview-render.js?v=cd40b868"></script>
-  <script src="/js/admin-settings-preview-controls.js?v=b32cd231"></script>
-  <script src="/js/admin-settings-preview.js?v=909bf2a1"></script>
-  <script src="/js/admin-settings-wallpaper.js?v=948f7d65"></script>
-  <script src="/js/admin-settings-ai.js?v=0d8c0558"></script>
-  <script src="/js/admin-settings-backup-ui.js?v=68eb553d"></script>
-  <script src="/js/admin-settings-backup.js?v=6673ac41"></script>
-  <script src="/js/admin-settings.js?v=22ceba7e"></script>
-  <script src="/js/admin-import-export.js?v=443f2c90"></script>
+  <script src="/js/admin-shared.js?v=a337b552"></script>
+  <script src="/js/admin-cache.js?v=ae06819c"></script>
+  <script src="/js/admin-bookmark-list.js?v=bbdffc2f"></script>
+  <script src="/js/admin-pending.js?v=b6ae86b9"></script>
+  <script src="/js/admin-tabs.js?v=3fe16a46"></script>
+  <script src="/js/admin-bookmark-privacy.js?v=cb0fbe1c"></script>
+  <script src="/js/admin.js?v=99dc278e"></script>
+  <script src="/js/admin-categories.js?v=6ee07657"></script>
+  <script src="/js/admin-bookmarks.js?v=2c52bc54"></script>
+  <script src="/js/admin-batch.js?v=231f596e"></script>
+  <script src="/js/wallpaper-defaults.js?v=7eebee6d"></script>
+  <script src="/js/admin-settings-defaults.js?v=8b7bfe07"></script>
+  <script src="/js/admin-settings-form.js?v=60080a86"></script>
+  <script src="/js/admin-settings-core.js?v=d5761790"></script>
+  <script src="/js/admin-settings-preview-shared.js?v=f036607b"></script>
+  <script src="/js/admin-settings-preview-data.js?v=649b33cc"></script>
+  <script src="/js/admin-settings-preview-nav.js?v=2fb2b1ca"></script>
+  <script src="/js/admin-settings-preview-animation.js?v=f69111b6"></script>
+  <script src="/js/admin-settings-preview-render.js?v=d34f94f7"></script>
+  <script src="/js/admin-settings-preview-controls.js?v=8fe1ca52"></script>
+  <script src="/js/admin-settings-preview.js?v=20153112"></script>
+  <script src="/js/admin-settings-wallpaper.js?v=e7168e1d"></script>
+  <script src="/js/admin-settings-ai.js?v=cc131031"></script>
+  <script src="/js/admin-settings-backup-ui.js?v=190ef154"></script>
+  <script src="/js/admin-settings-backup.js?v=33b864d8"></script>
+  <script src="/js/admin-settings.js?v=ffd35eeb"></script>
+  <script src="/js/admin-import-export.js?v=b1b28f40"></script>
 </body>
 
 </html>

@@ -1716,6 +1716,53 @@ body .search-engine-option.active {
   border: 1px solid rgba(255, 255, 255, 0.9) !important;
 }
 
+/* 风格一/二搜索栏复用卡片毛玻璃配色与模糊变量；风格三保留其独立样式。 */
+@media (min-width: 768px) {
+  .search-input-target.desktop-search-frosted-glass {
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(var(--frosted-glass-blur, 15px)) !important;
+    -webkit-backdrop-filter: blur(var(--frosted-glass-blur, 15px)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .search-input-target.desktop-search-frosted-glass:hover,
+  .search-input-target.desktop-search-frosted-glass:focus {
+    background: rgba(255, 255, 255, 0.6) !important;
+    border-color: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  html.dark .search-input-target.desktop-search-frosted-glass {
+    background: rgba(30, 41, 59, 0.4) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .search-input-target.mobile-search-frosted-glass {
+    background: rgba(255, 255, 255, 0.4) !important;
+    backdrop-filter: blur(var(--frosted-glass-blur, 15px)) !important;
+    -webkit-backdrop-filter: blur(var(--frosted-glass-blur, 15px)) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05) !important;
+  }
+
+  .search-input-target.mobile-search-frosted-glass:hover,
+  .search-input-target.mobile-search-frosted-glass:focus {
+    background: rgba(255, 255, 255, 0.6) !important;
+    border-color: rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15) !important;
+  }
+
+  html.dark .search-input-target.mobile-search-frosted-glass {
+    background: rgba(30, 41, 59, 0.4) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3) !important;
+  }
+}
+
 /* Light Mode + Wallpaper Sidebar Optimization */
 html:not(.dark) body.custom-wallpaper .sidebar {
     background-color: rgba(255, 255, 255, 0.4) !important;
