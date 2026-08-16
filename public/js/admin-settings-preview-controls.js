@@ -250,6 +250,7 @@
       refs.frostedGlassIntensityRange,
       refs.rainEffectSwitch,
       refs.rainDropSizeRange,
+      refs.rainDensityRange,
       refs.cardRadiusInput,
       refs.cardTitleFontInput,
       refs.cardTitleSizeInput,
