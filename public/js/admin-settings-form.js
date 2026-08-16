@@ -76,6 +76,8 @@
       rainEffectSwitch: document.getElementById('rainEffectSwitch'),
       rainDropSizeRange: document.getElementById('rainDropSize'),
       rainDropSizeValue: document.getElementById('rainDropSizeValue'),
+      rainDensityRange: document.getElementById('rainDensity'),
+      rainDensityValue: document.getElementById('rainDensityValue'),
       cardDescFontInput: document.getElementById('cardDescFont'),
       cardDescSizeInput: document.getElementById('cardDescSize'),
       cardDescColorInput: document.getElementById('cardDescColor'),
@@ -302,6 +304,7 @@
     currentSettings.layout_card_border_radius = refs.cardRadiusInput?.value || '12';
     currentSettings.layout_enable_rain_effect = !!refs.rainEffectSwitch?.checked;
     currentSettings.layout_rain_drop_size = refs.rainDropSizeRange?.value || '12';
+    currentSettings.layout_rain_density = refs.rainDensityRange?.value || '20';
     currentSettings.card_title_font = refs.cardTitleFontInput?.value.trim() || '';
     currentSettings.card_title_size = refs.cardTitleSizeInput?.value.trim() || '';
     currentSettings.card_title_color = refs.cardTitleColorInput?.value.trim() || '';
@@ -455,6 +458,7 @@
     setValue(refs.cardAnimationSelect, currentSettings.layout_card_animation || 'radial');
     setChecked(refs.rainEffectSwitch, currentSettings.layout_enable_rain_effect);
     setRangeValue(refs.rainDropSizeRange, refs.rainDropSizeValue, currentSettings.layout_rain_drop_size || '12');
+    setRangeValue(refs.rainDensityRange, refs.rainDensityValue, currentSettings.layout_rain_density || '20');
     ns.preview?.syncAnimationOptions?.();
     setRangeValue(refs.cardRadiusInput, refs.cardRadiusValue, currentSettings.layout_card_border_radius || '12');
     setValue(refs.cardTitleFontInput, currentSettings.card_title_font || '');
