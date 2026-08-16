@@ -515,7 +515,7 @@ export async function onRequest(context) {
   }
   if (customCardCss) headInjections += `<style>${customCardCss}</style>`;
 
-  // 全局站点卡片视图模型与布局配置：直接序列化后注入到 main.js 之前
+  // 全局站点卡片视图模型与布局配置：直接序列化后注入到依赖它的脚本之前
   const cardHydrationState = buildCardHydrationState(allSites, S);
   const safeSitesJson = JSON.stringify(cardHydrationState.cards).replace(/</g, '\\u003c');
   const safeCardConfigJson = JSON.stringify(cardHydrationState.config).replace(/</g, '\\u003c');
@@ -555,16 +555,16 @@ export async function onRequest(context) {
   );
   html = html.replace('</body>', '</div></body>');
 
-  // 将 IORI_SITES / IORI_LAYOUT_CONFIG 数据注入到 main.js 之前，使其在 body 底部而非 <head>，加快 FCP
+  // 将配置注入到 rain-effect.js 之前，同时保持在 body 底部以加快 FCP
   // - 字面量匹配：避免未来模板给 <script> 加 defer/type 等属性时正则静默失配
   // - 函数形式 replacement：规避用户数据中可能含 $&、$1 等被当作 back-reference
-  const mainJsMarker = '<script src="/js/main.js';
-  if (!html.includes(mainJsMarker)) {
-    console.error('Card hydration injection skipped: main.js marker not found in template');
+  const hydrationScriptMarker = '<script src="/js/rain-effect.js';
+  if (!html.includes(hydrationScriptMarker)) {
+    console.error('Card hydration injection skipped: rain-effect.js marker not found in template');
   } else {
     html = html.replace(
-      mainJsMarker,
-      () => `<script>window.IORI_SITES=${safeSitesJson};window.IORI_CARD_CONFIG=${safeCardConfigJson};window.IORI_CARD_CONFIGS=${safeCardConfigsJson};window.IORI_LAYOUT_CONFIG=${safeLayoutConfigJson};window.IORI_RAIN_CONFIG=${safeRainConfigJson};</script>\n  ${mainJsMarker}`
+      hydrationScriptMarker,
+      () => `<script>window.IORI_SITES=${safeSitesJson};window.IORI_CARD_CONFIG=${safeCardConfigJson};window.IORI_CARD_CONFIGS=${safeCardConfigsJson};window.IORI_LAYOUT_CONFIG=${safeLayoutConfigJson};window.IORI_RAIN_CONFIG=${safeRainConfigJson};</script>\n  ${hydrationScriptMarker}`
     );
   }
 
