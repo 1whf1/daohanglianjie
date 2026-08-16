@@ -155,49 +155,21 @@
 
 .preview-rain-drop {
   position: absolute;
-  border-radius: 999px;
-  background: linear-gradient(to bottom, transparent, rgba(219, 239, 255, 0.95));
-  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.55));
+  border-radius: 45% 55% 48% 52%;
+  background: rgba(255, 255, 255, 0.92);
+  clip-path: polygon(50% 0%, 60% 28%, 86% 14%, 72% 42%, 100% 50%, 72% 58%, 86% 86%, 60% 72%, 50% 100%, 40% 72%, 14% 86%, 28% 58%, 0% 50%, 28% 42%, 14% 14%, 40% 28%);
+  filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.85));
   opacity: 0;
   transform: translate3d(0, 0, 0);
   animation: preview-rain-fall var(--rain-duration, 600ms) linear forwards;
 }
 
-.preview-rain-splash {
-  position: absolute;
-  border: 1.5px solid rgba(224, 244, 255, 0.9);
-  border-top-color: transparent;
-  border-radius: 50%;
-  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.6));
-  animation: preview-rain-splash-pop 520ms ease-out forwards;
-}
-
-.preview-rain-splash i {
-  position: absolute;
-  left: 50%;
-  bottom: 1px;
-  border-radius: 999px;
-  background: rgba(224, 244, 255, 0.9);
-  transform-origin: 50% 100%;
-  animation: preview-rain-splash-spray 420ms ease-out forwards;
-}
-
 @keyframes preview-rain-fall {
-  0% { opacity: 0; transform: translate3d(0, 0, 0); }
-  18% { opacity: 0.78; }
-  88% { opacity: 0.72; }
-  100% { opacity: 0; transform: translate3d(0, var(--rain-distance), 0); }
-}
-
-@keyframes preview-rain-splash-pop {
-  0% { opacity: 0; transform: scale(0.2); }
-  25% { opacity: 0.95; transform: scale(0.9); }
-  100% { opacity: 0; transform: scale(1.55); }
-}
-
-@keyframes preview-rain-splash-spray {
-  0% { opacity: 0.95; transform: rotate(var(--spray-angle)) translateY(0) scaleY(0.4); }
-  100% { opacity: 0; transform: rotate(var(--spray-angle)) translateY(calc(var(--spray-distance) * -1)) scaleY(1); }
+  0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(0deg); }
+  15% { opacity: 0.9; }
+  38% { transform: translate3d(var(--snow-sway), calc(var(--rain-distance) * 0.38), 0) rotate(120deg); }
+  68% { opacity: 0.78; transform: translate3d(calc(var(--snow-drift) - var(--snow-sway)), calc(var(--rain-distance) * 0.68), 0) rotate(240deg); }
+  100% { opacity: 0; transform: translate3d(var(--snow-drift), var(--rain-distance), 0) rotate(360deg); }
 }
 
 @media (prefers-reduced-motion: reduce) {
