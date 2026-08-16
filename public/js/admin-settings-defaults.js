@@ -13,11 +13,13 @@
     'home_search_engine_enabled',
     'home_remember_last_category',
     'layout_enable_frosted_glass',
+    'layout_enable_search_frosted_glass',
     'layout_enable_bg_blur',
     'mobile_layout_hide_desc',
     'mobile_layout_hide_links',
     'mobile_layout_hide_category',
     'mobile_layout_enable_frosted_glass',
+    'mobile_layout_enable_search_frosted_glass',
   ];
 
   // 空串语义是「回退到默认值」，所以服务端给空值时跳过赋值，保留 createDefaultSettings 的默认
@@ -84,6 +86,7 @@
   const MOBILE_FALLBACK_FIELDS = [
     ['mobile_layout_hide_category', 'layout_hide_category'],
     ['mobile_layout_enable_frosted_glass', 'layout_enable_frosted_glass'],
+    ['mobile_layout_enable_search_frosted_glass', 'layout_enable_search_frosted_glass'],
     ['mobile_layout_frosted_glass_intensity', 'layout_frosted_glass_intensity'],
     ['mobile_layout_card_animation', 'layout_card_animation'],
     ['mobile_layout_card_border_radius', 'layout_card_border_radius'],
@@ -129,6 +132,7 @@
       home_category_position: 'below_search',
       home_category_flow: 'single_line',
       layout_enable_frosted_glass: false,
+      layout_enable_search_frosted_glass: false,
       layout_frosted_glass_intensity: '15',
       layout_grid_cols: '4',
       layout_custom_wallpaper: '',
@@ -151,6 +155,7 @@
       mobile_layout_hide_links: true,
       mobile_layout_hide_category: false,
       mobile_layout_enable_frosted_glass: false,
+      mobile_layout_enable_search_frosted_glass: false,
       mobile_layout_frosted_glass_intensity: '15',
       mobile_layout_grid_cols: '3',
       mobile_layout_card_style: 'style2',
