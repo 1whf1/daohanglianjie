@@ -8,6 +8,7 @@
   const MIN_RAIN_DENSITY = 20;
   const MAX_RAIN_DENSITY = 200;
   const MAX_ACTIVE_RAIN_NODES = 180;
+  const TARGETED_RAIN_RATIO = 0.7;
   let layer = null;
   let timer = null;
   let enabled = true;
@@ -41,20 +42,24 @@
     return Math.min(MAX_RAIN_DENSITY, Math.max(MIN_RAIN_DENSITY, configured));
   }
 
-  function getCollisionSurface(x) {
+  function getRainSurfaces() {
     if (!isStyleOneActive()) return null;
-    const surfaces = Array.from(document.querySelectorAll(targetSelector))
+    return Array.from(document.querySelectorAll(targetSelector))
       .map((element) => ({ element, rect: element.getBoundingClientRect() }))
       .filter(({ rect }) => (
         rect.width > 12
         && rect.height > 8
         && rect.bottom > 0
         && rect.top < window.innerHeight
-        && x >= rect.left
-        && x <= rect.right
       ))
       .sort((a, b) => a.rect.top - b.rect.top);
-    return surfaces[0] || null;
+  }
+
+  function getRandomRainSurface() {
+    const surfaces = getRainSurfaces();
+    return surfaces?.length
+      ? surfaces[Math.floor(Math.random() * surfaces.length)]
+      : null;
   }
 
   function clearTimer() {
@@ -132,9 +137,13 @@
 
     const size = getRainSize();
     const width = Math.max(1, window.innerWidth);
-    const x = Math.random() * width;
+    const surface = Math.random() < TARGETED_RAIN_RATIO
+      ? getRandomRainSurface()
+      : null;
+    const x = surface
+      ? surface.rect.left + Math.random() * surface.rect.width
+      : Math.random() * width;
     const startY = -size * 3 - Math.random() * Math.max(40, window.innerHeight * 0.18);
-    const surface = getCollisionSurface(x);
     const impactRatio = surface ? (0.12 + Math.random() * 0.76) : null;
     const impactY = surface
       ? surface.rect.top + surface.rect.height * impactRatio

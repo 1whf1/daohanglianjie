@@ -16,6 +16,7 @@
  const MIN_PREVIEW_RAIN_DENSITY = 20;
  const MAX_PREVIEW_RAIN_DENSITY = 200;
  const MAX_PREVIEW_RAIN_NODES = 120;
+ const TARGETED_PREVIEW_RAIN_RATIO = 0.7;
 
  function readPreviewSettings() {
     const refs = shared.getRefs();
@@ -272,14 +273,11 @@
     }).sort((a, b) => a.rect.top - b.rect.top);
   }
 
- function getPreviewCollisionSurface(root, x) {
-    const rootRect = root.getBoundingClientRect();
-    return getPreviewRainTargets(root).find(({ rect }) => (
-      rect.top >= rootRect.top
-      && rect.top < rootRect.bottom
-      && x >= rect.left - rootRect.left
-      && x <= rect.right - rootRect.left
-    )) || null;
+ function getPreviewRainSurface(root) {
+    const targets = getPreviewRainTargets(root);
+    return targets.length
+      ? targets[Math.floor(Math.random() * targets.length)]
+      : null;
   }
 
  function createPreviewSplash(x, y, size) {
@@ -308,9 +306,13 @@
     if (!previewRainLayer || previewRainLayer.childElementCount >= MAX_PREVIEW_RAIN_NODES) return;
     const rootRect = root.getBoundingClientRect();
     const size = getPreviewRainSize(settings);
-    const x = Math.random() * Math.max(1, rootRect.width);
+    const surface = Math.random() < TARGETED_PREVIEW_RAIN_RATIO
+      ? getPreviewRainSurface(root)
+      : null;
+    const x = surface
+      ? surface.rect.left - rootRect.left + Math.random() * surface.rect.width
+      : Math.random() * Math.max(1, rootRect.width);
     const startY = -size * 3 - Math.random() * Math.max(30, rootRect.height * 0.16);
-    const surface = getPreviewCollisionSurface(root, x);
     const impactRatio = surface ? (0.12 + Math.random() * 0.76) : null;
     const impactY = surface
       ? surface.rect.top - rootRect.top + surface.rect.height * impactRatio
