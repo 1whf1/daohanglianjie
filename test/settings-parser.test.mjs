@@ -15,6 +15,7 @@ test('parseSettings applies documented defaults', () => {
   assert.equal(settings.layout_enable_search_frosted_glass, false);
   assert.equal(settings.layout_enable_rain_effect, false);
   assert.equal(settings.layout_rain_drop_size, '12');
+  assert.equal(settings.layout_rain_density, '20');
   assert.equal(settings.mobile_layout_grid_cols, '3');
   assert.equal(settings.mobile_layout_card_animation, 'radial');
   assert.equal(settings.mobile_layout_hide_desc, true);
@@ -91,6 +92,7 @@ test('getSettingsKeys matches parseable setting fields', () => {
   assert.ok(keys.includes('layout_enable_search_frosted_glass'));
   assert.ok(keys.includes('layout_enable_rain_effect'));
   assert.ok(keys.includes('layout_rain_drop_size'));
+  assert.ok(keys.includes('layout_rain_density'));
   assert.ok(keys.includes('card_desc_color'));
   assert.equal(new Set(keys).size, keys.length);
 });
@@ -116,6 +118,12 @@ test('normalizeSettingValueForStorage validates style and enum settings', () => 
   assert.deepEqual(normalizeSettingValueForStorage('layout_rain_drop_size', '8'), { ok: true, value: '8' });
   assert.deepEqual(normalizeSettingValueForStorage('layout_rain_drop_size', '32'), { ok: true, value: '32' });
   assert.equal(normalizeSettingValueForStorage('layout_rain_drop_size', '7').ok, false);
+  assert.deepEqual(normalizeSettingValueForStorage('layout_rain_density', '20'), { ok: true, value: '20' });
+  assert.deepEqual(normalizeSettingValueForStorage('layout_rain_density', '100'), { ok: true, value: '100' });
+  assert.deepEqual(normalizeSettingValueForStorage('layout_rain_density', '200'), { ok: true, value: '200' });
+  assert.equal(normalizeSettingValueForStorage('layout_rain_density', '19').ok, false);
+  assert.equal(normalizeSettingValueForStorage('layout_rain_density', '201').ok, false);
+  assert.equal(normalizeSettingValueForStorage('layout_rain_density', 'dense').ok, false);
   assert.deepEqual(normalizeSettingValueForStorage('layout_frosted_glass_intensity', '0'), { ok: true, value: '0' });
   assert.deepEqual(normalizeSettingValueForStorage('mobile_layout_frosted_glass_intensity', '0'), { ok: true, value: '0' });
   assert.deepEqual(normalizeSettingValueForStorage('home_category_position', 'above_description'), { ok: true, value: 'top' });
