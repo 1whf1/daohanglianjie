@@ -361,6 +361,19 @@ test('bookmark title settings explain and drive external search colors only', ()
   assert.doesNotMatch(previewSource, /searchEngines\.style\.(?:fontFamily|fontSize)/);
 });
 
+test('admin preview mirrors the rain setting and keeps the dense rain cadence', () => {
+  const previewSource = readFileSync('public/js/admin-settings-preview-render.js', 'utf8');
+  const previewCss = readFileSync('public/css/admin-preview-shell.css', 'utf8');
+  const rainSource = readFileSync('public/js/rain-effect.js', 'utf8');
+
+  assert.match(previewSource, /rainEffect: !!refs\.rainEffectSwitch\?\.checked/);
+  assert.match(previewSource, /syncPreviewRain\(root, settings\)/);
+  assert.match(previewSource, /PREVIEW_RAIN_DENSITY_MULTIPLIER = 20/);
+  assert.match(previewCss, /\.preview-rain-layer\s*\{/);
+  assert.match(rainSource, /RAIN_DENSITY_MULTIPLIER = 20/);
+  assert.match(rainSource, /scheduleDenseDrop\(420 \+ Math\.random\(\) \* 900\)/);
+});
+
 test('home and admin preview use a sticky footer layout', () => {
   const homeCss = readFileSync('public/css/style.css', 'utf8');
   const previewShellCss = readFileSync('public/css/admin-preview-shell.css', 'utf8');
