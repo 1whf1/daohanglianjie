@@ -9,6 +9,11 @@
  let livePreviewSelectedCategory = null;
 
  let livePreviewPendingCardAnimation = false;
+ let previewRainTimer = null;
+ let previewRainLayer = null;
+ let previewRainRoot = null;
+ let previewRainSettings = null;
+ const PREVIEW_RAIN_DENSITY_MULTIPLIER = 20;
 
  function readPreviewSettings() {
     const refs = shared.getRefs();
@@ -30,6 +35,8 @@
       cardDescFont: shared.getPreviewInputValue(refs.mobileCardDescFontInput, current.mobile_card_desc_font || ''),
       cardDescSize: shared.getPreviewInputValue(refs.mobileCardDescSizeInput, current.mobile_card_desc_size || ''),
       cardDescColor: shared.getPreviewInputValue(refs.mobileCardDescColorInput, current.mobile_card_desc_color || ''),
+      rainEffect: !!refs.rainEffectSwitch?.checked,
+      rainDropSize: shared.getPreviewInputValueOrDefault(refs.rainDropSizeRange, current.layout_rain_drop_size, '12'),
     } : {
       gridCols: shared.getRadioValue(refs.gridColsRadios, current.layout_grid_cols || '4'),
       cardStyle: current.layout_card_style || 'style1',
@@ -46,6 +53,8 @@
       cardDescFont: shared.getPreviewInputValue(refs.cardDescFontInput, current.card_desc_font || ''),
       cardDescSize: shared.getPreviewInputValue(refs.cardDescSizeInput, current.card_desc_size || ''),
       cardDescColor: shared.getPreviewInputValue(refs.cardDescColorInput, current.card_desc_color || ''),
+      rainEffect: !!refs.rainEffectSwitch?.checked,
+      rainDropSize: shared.getPreviewInputValueOrDefault(refs.rainDropSizeRange, current.layout_rain_drop_size, '12'),
     };
     return {
       previewDevice: isMobilePreview ? 'mobile' : 'desktop',
@@ -219,7 +228,116 @@
     if (titleBlock) titleBlock.style.order = order.title;
     if (searchEngines) searchEngines.style.order = order.engines;
     if (searchBox) searchBox.style.order = order.search;
-    if (categoryNav) categoryNav.style.order = order.category;
+   if (categoryNav) categoryNav.style.order = order.category;
+ }
+
+ function getPreviewRainSize(settings) {
+    const configured = Number(settings.rainDropSize);
+    if (!Number.isFinite(configured)) return 12;
+    return Math.min(32, Math.max(8, configured));
+  }
+
+ function clearPreviewRain() {
+    if (previewRainTimer !== null) {
+      window.clearTimeout(previewRainTimer);
+      previewRainTimer = null;
+    }
+    previewRainLayer?.remove();
+    previewRainLayer = null;
+    previewRainRoot = null;
+    previewRainSettings = null;
+  }
+
+ function getPreviewRainTargets(root) {
+    const rootRect = root.getBoundingClientRect();
+    return Array.from(root.querySelectorAll(
+      '.search-input-target, .live-category-button, .live-sidebar-item, .live-card'
+    )).filter((element) => {
+      const rect = element.getBoundingClientRect();
+      return rect.width > 8
+        && rect.height > 6
+        && rect.bottom > rootRect.top
+        && rect.top < rootRect.bottom
+        && rect.right > rootRect.left
+        && rect.left < rootRect.right;
+    });
+  }
+
+ function createPreviewSplash(x, y, size) {
+    if (!previewRainLayer) return;
+    const splash = document.createElement('span');
+    splash.className = 'preview-rain-splash';
+    splash.style.width = `${size * 1.3}px`;
+    splash.style.height = `${size * 0.45}px`;
+    splash.style.margin = `${-size * 0.225}px 0 0 ${-size * 0.65}px`;
+    splash.style.borderWidth = `${Math.max(1.5, size * 0.12)}px`;
+    splash.style.left = `${x}px`;
+    splash.style.top = `${y}px`;
+    for (let index = 0; index < 3; index += 1) {
+      const spray = document.createElement('i');
+      spray.style.width = `${Math.max(2, size * 0.16)}px`;
+      spray.style.height = `${size * 0.55}px`;
+      spray.style.setProperty('--spray-angle', `${-55 + index * 55}deg`);
+      spray.style.setProperty('--spray-distance', `${size * 0.55 + Math.random() * size * 0.25}px`);
+      splash.appendChild(spray);
+    }
+    previewRainLayer.appendChild(splash);
+    splash.addEventListener('animationend', () => splash.remove(), { once: true });
+  }
+
+ function spawnPreviewRainDrop(root, settings) {
+    const targets = getPreviewRainTargets(root);
+    if (!targets.length || !previewRainLayer) return;
+    const rootRect = root.getBoundingClientRect();
+    const target = targets[Math.floor(Math.random() * targets.length)];
+    const rect = target.getBoundingClientRect();
+    const size = getPreviewRainSize(settings);
+    const x = rect.left - rootRect.left + Math.max(4, Math.random() * Math.max(6, rect.width - 8));
+    const landingY = rect.top - rootRect.top + 2 + Math.random() * Math.max(3, rect.height - 4);
+    const startY = Math.max(-60, landingY - 80 - Math.random() * 60);
+    const drop = document.createElement('span');
+    drop.className = 'preview-rain-drop';
+    drop.style.width = `${Math.max(2, size * 0.2)}px`;
+    drop.style.height = `${size * 2.6}px`;
+    drop.style.marginLeft = `${-Math.max(2, size * 0.2) / 2}px`;
+    drop.style.left = `${x}px`;
+    drop.style.top = `${startY}px`;
+    drop.style.setProperty('--rain-distance', `${landingY - startY}px`);
+    drop.style.setProperty('--rain-duration', `${420 + Math.random() * 260}ms`);
+    previewRainLayer.appendChild(drop);
+    drop.addEventListener('animationend', () => {
+      createPreviewSplash(x, landingY, size);
+      drop.remove();
+    }, { once: true });
+  }
+
+ function syncPreviewRain(root, settings) {
+    const shouldRun = settings.rainEffect && settings.cardStyle === 'style1';
+    if (!shouldRun) {
+      clearPreviewRain();
+      return;
+    }
+    if (!previewRainLayer || previewRainRoot !== root) {
+      clearPreviewRain();
+      previewRainRoot = root;
+      previewRainSettings = settings;
+      previewRainLayer = document.createElement('div');
+      previewRainLayer.className = 'preview-rain-layer';
+      previewRainLayer.setAttribute('aria-hidden', 'true');
+      root.appendChild(previewRainLayer);
+    } else {
+      previewRainSettings = settings;
+    }
+    if (previewRainTimer !== null) return;
+    previewRainTimer = window.setTimeout(() => {
+      previewRainTimer = null;
+      if (!previewRainRoot?.isConnected || !data.isPreviewModalVisible()) {
+        clearPreviewRain();
+        return;
+      }
+      spawnPreviewRainDrop(previewRainRoot, previewRainSettings);
+      syncPreviewRain(previewRainRoot, previewRainSettings);
+    }, Math.max(18, 500 / PREVIEW_RAIN_DENSITY_MULTIPLIER));
   }
 
  function renderFullPreview() {
@@ -348,6 +466,7 @@
     if (footerText) footerText.textContent = settings.footerText;
 
     renderPreviewCards(cardGrid, settings, previewState);
+    syncPreviewRain(root, settings);
     if (
       livePreviewPendingCardAnimation
       && previewState?.isLoaded
