@@ -274,6 +274,7 @@ test('rain effect control is rendered only for an enabled style one configuratio
   assert.doesNotMatch(disabledHtml, /id="rainToggleBtn"/);
   assert.match(styleOneHtml, /id="rainToggleBtn"/);
   assert.match(styleOneHtml, /window\.IORI_RAIN_CONFIG=\{"available":true/);
+  assert.ok(styleOneHtml.indexOf('window.IORI_RAIN_CONFIG=') < styleOneHtml.indexOf('/js/rain-effect.js'));
   assert.doesNotMatch(styleThreeHtml, /id="rainToggleBtn"/);
   assert.match(styleThreeHtml, /window\.IORI_RAIN_CONFIG=\{"available":false/);
 });
