@@ -248,6 +248,7 @@
       refs.frostedGlassSwitch,
       refs.searchFrostedGlassSwitch,
       refs.frostedGlassIntensityRange,
+      refs.rainDropSizeRange,
       refs.cardRadiusInput,
       refs.cardTitleFontInput,
       refs.cardTitleSizeInput,
