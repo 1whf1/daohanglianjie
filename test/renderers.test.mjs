@@ -363,12 +363,14 @@ test('bookmark title settings explain and drive external search colors only', ()
 
 test('admin preview mirrors the rain setting and keeps the dense rain cadence', () => {
   const previewSource = readFileSync('public/js/admin-settings-preview-render.js', 'utf8');
+  const controlsSource = readFileSync('public/js/admin-settings-preview-controls.js', 'utf8');
   const previewCss = readFileSync('public/css/admin-preview-shell.css', 'utf8');
   const rainSource = readFileSync('public/js/rain-effect.js', 'utf8');
 
   assert.match(previewSource, /rainEffect: !!refs\.rainEffectSwitch\?\.checked/);
   assert.match(previewSource, /syncPreviewRain\(root, settings\)/);
   assert.match(previewSource, /PREVIEW_RAIN_DENSITY_MULTIPLIER = 20/);
+  assert.match(controlsSource, /desktopCardInputs = \[[\s\S]*refs\.rainEffectSwitch/);
   assert.match(previewCss, /\.preview-rain-layer\s*\{/);
   assert.match(rainSource, /RAIN_DENSITY_MULTIPLIER = 20/);
   assert.match(rainSource, /scheduleDenseDrop\(420 \+ Math\.random\(\) \* 900\)/);
