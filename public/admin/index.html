@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="/css/admin-layout.css?v=768f9ade" />
   <link rel="stylesheet" href="/css/admin-forms.css?v=d3e66934" />
   <link rel="stylesheet" href="/css/admin-card-options.css?v=32c2dfc2" />
-  <link rel="stylesheet" href="/css/admin-preview-shell.css?v=078d3203" />
+  <link rel="stylesheet" href="/css/admin-preview-shell.css?v=e9230a8f" />
   <link rel="stylesheet" href="/css/admin-preview-controls.css?v=115b7158" />
   <link rel="stylesheet" href="/css/admin-preview-cards.css?v=ec41ebfe" />
   <link rel="stylesheet" href="/css/admin-settings-modal.css?v=4834a690" />
@@ -1086,6 +1086,12 @@
                   <input type="range" id="rainDropSize" min="8" max="32" step="1" value="12"
                     class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
                 </div>
+                <div class="p-2 hover:bg-gray-50 rounded" id="rainDensityContainer">
+                  <label for="rainDensity" class="block text-gray-700 font-medium mb-1">雨滴密集程度: <span
+                      id="rainDensityValue">20</span>倍</label>
+                  <input type="range" id="rainDensity" min="20" max="200" step="5" value="20"
+                    class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer">
+                </div>
               </div>
 
               <div class="p-2 hover:bg-gray-50 rounded" id="frostedGlassIntensityContainer">
@@ -1749,15 +1755,15 @@
   <script src="/js/admin-bookmarks.js?v=2c52bc54"></script>
   <script src="/js/admin-batch.js?v=231f596e"></script>
   <script src="/js/wallpaper-defaults.js?v=7eebee6d"></script>
-  <script src="/js/admin-settings-defaults.js?v=e18c52f9"></script>
-  <script src="/js/admin-settings-form.js?v=e5ef00db"></script>
-  <script src="/js/admin-settings-core.js?v=df4d77a7"></script>
+  <script src="/js/admin-settings-defaults.js?v=33794c15"></script>
+  <script src="/js/admin-settings-form.js?v=76af900c"></script>
+  <script src="/js/admin-settings-core.js?v=e0b3dc7d"></script>
   <script src="/js/admin-settings-preview-shared.js?v=f036607b"></script>
   <script src="/js/admin-settings-preview-data.js?v=649b33cc"></script>
   <script src="/js/admin-settings-preview-nav.js?v=2fb2b1ca"></script>
   <script src="/js/admin-settings-preview-animation.js?v=f69111b6"></script>
-  <script src="/js/admin-settings-preview-render.js?v=643a8f0c"></script>
-  <script src="/js/admin-settings-preview-controls.js?v=e698e1e0"></script>
+  <script src="/js/admin-settings-preview-render.js?v=428ca779"></script>
+  <script src="/js/admin-settings-preview-controls.js?v=93ddd24a"></script>
   <script src="/js/admin-settings-preview.js?v=20153112"></script>
   <script src="/js/admin-settings-wallpaper.js?v=e7168e1d"></script>
   <script src="/js/admin-settings-ai.js?v=cc131031"></script>
