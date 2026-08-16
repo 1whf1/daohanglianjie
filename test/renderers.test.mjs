@@ -387,9 +387,11 @@ test('rain settings support full-window vertical rain, adjustable density and ta
   assert.match(rainSource, /MAX_RAIN_DENSITY = 200/);
   assert.match(rainSource, /const x = Math\.random\(\) \* width/);
   assert.match(rainSource, /getCollisionSurface\(x\)/);
-  assert.match(rainSource, /createSplash\(x, latestRect\.top\)/);
+  assert.match(rainSource, /const impactRatio = surface \? \(0\.12 \+ Math\.random\(\) \* 0\.76\) : null/);
+  assert.match(rainSource, /createSplash\(x, latestRect\.top \+ latestRect\.height \* impactRatio\)/);
   assert.doesNotMatch(rainSource, /createSlideTrail/);
-  assert.match(previewSource, /createPreviewSplash\(x, latestRect\.top - root\.getBoundingClientRect\(\)\.top, size\)/);
+  assert.match(previewSource, /const impactRatio = surface \? \(0\.12 \+ Math\.random\(\) \* 0\.76\) : null/);
+  assert.match(previewSource, /latestRect\.top - latestRootRect\.top \+ latestRect\.height \* impactRatio/);
   assert.doesNotMatch(previewSource, /createPreviewSlideTrail/);
   assert.match(workerSource, /density: normalizeRainDensity\(S\.layout_rain_density, 20\)/);
 });
