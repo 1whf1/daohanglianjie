@@ -361,7 +361,7 @@ test('bookmark title settings explain and drive external search colors only', ()
   assert.doesNotMatch(previewSource, /searchEngines\.style\.(?:fontFamily|fontSize)/);
 });
 
-test('rain settings support full-window vertical rain, adjustable density and slide trails', () => {
+test('rain settings support full-window vertical rain, adjustable density and target splashes', () => {
   const html = readFileSync('public/admin/index.html', 'utf8');
   const previewSource = readFileSync('public/js/admin-settings-preview-render.js', 'utf8');
   const controlsSource = readFileSync('public/js/admin-settings-preview-controls.js', 'utf8');
@@ -378,14 +378,19 @@ test('rain settings support full-window vertical rain, adjustable density and sl
   assert.match(previewSource, /const x = Math\.random\(\) \* Math\.max\(1, rootRect\.width\)/);
   assert.match(controlsSource, /desktopCardInputs = \[[\s\S]*refs\.rainDensityRange/);
   assert.match(previewCss, /\.preview-rain-layer\s*\{/);
-  assert.match(previewCss, /\.preview-rain-slide-trail\s*\{/);
+  assert.match(previewCss, /\.preview-rain-splash\s*\{/);
+  assert.doesNotMatch(previewCss, /\.preview-rain-slide-trail\s*\{/);
   assert.match(homeCss, /#rainEffectLayer\s*\{[\s\S]*position: fixed;[\s\S]*inset: 0;/);
-  assert.match(homeCss, /\.rain-slide-trail\s*\{/);
+  assert.match(homeCss, /\.rain-splash\s*\{/);
+  assert.doesNotMatch(homeCss, /\.rain-slide-trail\s*\{/);
   assert.doesNotMatch(homeCss, /rain-fall[\s\S]*?rotate\(12deg\)/);
   assert.match(rainSource, /MAX_RAIN_DENSITY = 200/);
   assert.match(rainSource, /const x = Math\.random\(\) \* width/);
   assert.match(rainSource, /getCollisionSurface\(x\)/);
-  assert.match(rainSource, /createSlideTrail\(x, surface\)/);
+  assert.match(rainSource, /createSplash\(x, latestRect\.top\)/);
+  assert.doesNotMatch(rainSource, /createSlideTrail/);
+  assert.match(previewSource, /createPreviewSplash\(x, latestRect\.top - root\.getBoundingClientRect\(\)\.top, size\)/);
+  assert.doesNotMatch(previewSource, /createPreviewSlideTrail/);
   assert.match(workerSource, /density: normalizeRainDensity\(S\.layout_rain_density, 20\)/);
 });
 

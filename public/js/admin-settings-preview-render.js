@@ -304,25 +304,6 @@
     splash.addEventListener('animationend', () => splash.remove(), { once: true });
   }
 
- function createPreviewSlideTrail(root, x, surface, size) {
-    if (!previewRainLayer || !surface?.element?.isConnected) return;
-    const rootRect = root.getBoundingClientRect();
-    const rect = surface.element.getBoundingClientRect();
-    const localX = x + rootRect.left;
-    if (localX < rect.left || localX > rect.right) return;
-    const trail = document.createElement('span');
-    const distance = Math.max(10, Math.min(rect.height - 2, size * (3.5 + Math.random() * 2.5)));
-    trail.className = 'preview-rain-slide-trail';
-    trail.style.left = `${x}px`;
-    trail.style.top = `${Math.max(0, rect.top - rootRect.top + 1)}px`;
-    trail.style.width = `${Math.max(1.5, size * 0.12)}px`;
-    trail.style.height = `${Math.max(14, size * 1.8)}px`;
-    trail.style.setProperty('--rain-slide-distance', `${distance}px`);
-    trail.style.setProperty('--rain-slide-duration', `${650 + Math.random() * 550}ms`);
-    previewRainLayer.appendChild(trail);
-    trail.addEventListener('animationend', () => trail.remove(), { once: true });
-  }
-
  function spawnPreviewRainDrop(root, settings) {
     if (!previewRainLayer || previewRainLayer.childElementCount >= MAX_PREVIEW_RAIN_NODES) return;
     const rootRect = root.getBoundingClientRect();
@@ -350,7 +331,6 @@
         const latestX = x + root.getBoundingClientRect().left;
         if (latestX >= latestRect.left && latestX <= latestRect.right) {
           createPreviewSplash(x, latestRect.top - root.getBoundingClientRect().top, size);
-          createPreviewSlideTrail(root, x, surface, size);
         }
       }
       drop.remove();
