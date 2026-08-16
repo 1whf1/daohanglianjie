@@ -56,6 +56,7 @@
     'layout_card_style',
     'layout_card_animation',
     'layout_card_border_radius',
+    'layout_rain_drop_size',
     'layout_rain_density',
     'card_title_font',
     'card_title_size',
