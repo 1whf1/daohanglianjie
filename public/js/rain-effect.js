@@ -4,6 +4,7 @@
 
   const Home = window.IoriHome = window.IoriHome || {};
   const storageKey = 'iori_rain_effect_enabled';
+  const RAIN_DENSITY_MULTIPLIER = 20;
   const targetSelector = '.search-input-target, .nav-btn, .site-card';
   let layer = null;
   let timer = null;
@@ -24,6 +25,12 @@
       ? config.mobileStyle
       : config.desktopStyle;
     return style === 'style1';
+  }
+
+  function getRainSize() {
+    const configured = Number(config.dropSize);
+    if (!Number.isFinite(configured)) return 12;
+    return Math.min(32, Math.max(8, configured));
   }
 
   function getTargets() {
@@ -70,19 +77,26 @@
         // Private browsing may reject localStorage; the in-memory state still works.
       }
     }
-    scheduleDrop(500);
+    scheduleDenseDrop(500);
   }
 
   function createSplash(x, y) {
     if (!layer || !enabled || !isStyleOneActive()) return;
     const splash = document.createElement('span');
     splash.className = 'rain-splash';
+    const size = getRainSize();
+    splash.style.width = `${size * 1.3}px`;
+    splash.style.height = `${size * 0.45}px`;
+    splash.style.margin = `${-size * 0.225}px 0 0 ${-size * 0.65}px`;
+    splash.style.borderWidth = `${Math.max(1.5, size * 0.12)}px`;
     splash.style.left = `${x}px`;
     splash.style.top = `${y}px`;
     for (let index = 0; index < 3; index += 1) {
       const spray = document.createElement('i');
+      spray.style.width = `${Math.max(2, size * 0.16)}px`;
+      spray.style.height = `${size * 0.55}px`;
       spray.style.setProperty('--spray-angle', `${-55 + index * 55}deg`);
-      spray.style.setProperty('--spray-distance', `${5 + Math.random() * 4}px`);
+      spray.style.setProperty('--spray-distance', `${size * 0.55 + Math.random() * size * 0.25}px`);
       splash.appendChild(spray);
     }
     layer.appendChild(splash);
@@ -108,6 +122,10 @@
     const startY = Math.max(-80, landingY - 100 - Math.random() * 90);
     const drop = document.createElement('span');
     drop.className = 'rain-drop';
+    const size = getRainSize();
+    drop.style.width = `${Math.max(2, size * 0.2)}px`;
+    drop.style.height = `${size * 2.6}px`;
+    drop.style.marginLeft = `${-Math.max(2, size * 0.2) / 2}px`;
     drop.style.left = `${x}px`;
     drop.style.top = `${startY}px`;
     drop.style.setProperty('--rain-distance', `${landingY - startY}px`);
@@ -117,7 +135,7 @@
       createSplash(x, landingY);
       drop.remove();
     }, { once: true });
-    scheduleDrop(420 + Math.random() * 900);
+    scheduleDenseDrop(420 + Math.random() * 900);
   }
 
   function scheduleDrop(delay = 700) {
@@ -126,12 +144,16 @@
     timer = window.setTimeout(createDrop, delay);
   }
 
+  function scheduleDenseDrop(delay) {
+    scheduleDrop(Math.max(18, delay / RAIN_DENSITY_MULTIPLIER));
+  }
+
   function handleVisibilityChange() {
     if (document.hidden) {
       clearTimer();
       return;
     }
-    if (enabled) scheduleDrop(350);
+    if (enabled) scheduleDenseDrop(350);
   }
 
   function handleResize() {
