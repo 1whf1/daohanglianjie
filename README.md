@@ -194,8 +194,9 @@ npx wrangler d1 execute book --local --file=schema.sql
 | `WORKERS_AI_MODEL` | `@cf/google/gemma-4-26b-a4b-it` | Workers AI 模型兜底；后台 AI 设置中保存的模型优先 |
 | `TURNSTILE_SITE_KEY` | 空 | Cloudflare Turnstile 站点密钥；与 `TURNSTILE_SECRET_KEY` 同时配置后启用后台登录与公开投稿人机验证 |
 | `TURNSTILE_SECRET_KEY` | 空 | Cloudflare Turnstile 机密密钥；与 `TURNSTILE_SITE_KEY` 同时配置后启用后台登录与公开投稿人机验证 |
+| `SITE_PASSWORD_ENABLED` | `false` | 网站访问密码开关，设置为 `true` 开启访问验证，设置为 `false` 关闭 |
+| `SITE_PASSWORD` | 空 | 网站访问密码，仅存储于 Cloudflare 环境变量，不提交到 Git 仓库 |
 
-> `DISPLAY_CATEGORY` 已废弃，当前版本不会读取该变量。
 
 ### 3) 配置优先级说明
 
