@@ -202,6 +202,12 @@
         refs.mobileFrostedGlassIntensityValue.textContent = refs.mobileFrostedGlassIntensityRange.value;
       }
     });
+
+    refs.rainDropSizeRange?.addEventListener('input', () => {
+      if (refs.rainDropSizeValue) {
+        refs.rainDropSizeValue.textContent = refs.rainDropSizeRange.value;
+      }
+    });
   }
 
   function initAutofillGuards(refs) {
