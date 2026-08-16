@@ -41,16 +41,21 @@ export const SETTINGS_SCHEMA = {
     layout_menu_layout: { default: 'horizontal', type: 'string' },
     bing_country: { default: '', type: 'string' },
     layout_enable_frosted_glass: { default: false, type: 'bool' },
+    layout_enable_search_frosted_glass: { default: false, type: 'bool' },
     layout_frosted_glass_intensity: { default: '15', type: 'string' },
     layout_enable_bg_blur: { default: false, type: 'bool' },
     layout_bg_blur_intensity: { default: '0', type: 'string' },
     layout_card_style: { default: 'style1', type: 'string' },
     layout_card_animation: { default: 'radial', type: 'string' },
     layout_card_border_radius: { default: '12', type: 'string' },
+    layout_enable_rain_effect: { default: false, type: 'bool' },
+    layout_rain_drop_size: { default: '12', type: 'string' },
+    layout_rain_density: { default: '20', type: 'string' },
     mobile_layout_hide_desc: { default: true, type: 'bool' },
     mobile_layout_hide_links: { default: true, type: 'bool' },
     mobile_layout_hide_category: { default: false, type: 'bool' },
     mobile_layout_enable_frosted_glass: { default: false, type: 'bool' },
+    mobile_layout_enable_search_frosted_glass: { default: false, type: 'bool' },
     mobile_layout_frosted_glass_intensity: { default: '15', type: 'string' },
     mobile_layout_grid_cols: { default: '3', type: 'string' },
     mobile_layout_card_style: { default: 'style2', type: 'string' },
@@ -260,6 +265,16 @@ export function normalizeSettingValueForStorage(key, value) {
         return normalized === null ? { ok: false, message: `Invalid ${key}` } : { ok: true, value: normalized };
     }
 
+    if (key === 'layout_rain_drop_size') {
+        const normalized = normalizeIntegerRange(text, 8, 32, '12');
+        return normalized === null ? { ok: false, message: `Invalid ${key}` } : { ok: true, value: normalized };
+    }
+
+    if (key === 'layout_rain_density') {
+        const normalized = normalizeIntegerRange(text, 20, 200, '20');
+        return normalized === null ? { ok: false, message: `Invalid ${key}` } : { ok: true, value: normalized };
+    }
+
     if (key === 'mobile_layout_card_border_radius') {
         const normalized = normalizeIntegerRange(text, 0, 30, '12');
         return normalized === null ? { ok: false, message: `Invalid ${key}` } : { ok: true, value: normalized };
@@ -327,6 +342,7 @@ export function parseSettings(dbResults) {
     const mobileFallbackKeys = [
         ['mobile_layout_hide_category', 'layout_hide_category'],
         ['mobile_layout_enable_frosted_glass', 'layout_enable_frosted_glass'],
+        ['mobile_layout_enable_search_frosted_glass', 'layout_enable_search_frosted_glass'],
         ['mobile_layout_frosted_glass_intensity', 'layout_frosted_glass_intensity'],
         ['mobile_layout_card_animation', 'layout_card_animation'],
         ['mobile_layout_card_border_radius', 'layout_card_border_radius'],

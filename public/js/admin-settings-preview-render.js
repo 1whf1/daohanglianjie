@@ -9,6 +9,13 @@
  let livePreviewSelectedCategory = null;
 
  let livePreviewPendingCardAnimation = false;
+ let previewRainTimer = null;
+ let previewRainLayer = null;
+ let previewRainRoot = null;
+ let previewRainSettings = null;
+ const MIN_PREVIEW_RAIN_DENSITY = 20;
+ const MAX_PREVIEW_RAIN_DENSITY = 200;
+ const MAX_PREVIEW_RAIN_NODES = 120;
 
  function readPreviewSettings() {
     const refs = shared.getRefs();
@@ -21,6 +28,7 @@
       hideCardLinks: !!refs.mobileHideLinksSwitch?.checked,
       hideCardCategory: !!refs.mobileHideCategorySwitch?.checked,
       frosted: !!refs.mobileFrostedGlassSwitch?.checked,
+      searchFrosted: !!refs.mobileSearchFrostedGlassSwitch?.checked,
       frostedIntensity: shared.getPreviewInputValueOrDefault(refs.mobileFrostedGlassIntensityRange, current.mobile_layout_frosted_glass_intensity, '15'),
       cardRadius: shared.getPreviewInputValueOrDefault(refs.mobileCardRadiusInput, current.mobile_layout_card_border_radius, '12'),
       cardTitleFont: shared.getPreviewInputValue(refs.mobileCardTitleFontInput, current.mobile_card_title_font || ''),
@@ -29,6 +37,9 @@
       cardDescFont: shared.getPreviewInputValue(refs.mobileCardDescFontInput, current.mobile_card_desc_font || ''),
       cardDescSize: shared.getPreviewInputValue(refs.mobileCardDescSizeInput, current.mobile_card_desc_size || ''),
       cardDescColor: shared.getPreviewInputValue(refs.mobileCardDescColorInput, current.mobile_card_desc_color || ''),
+      rainEffect: !!refs.rainEffectSwitch?.checked,
+      rainDropSize: shared.getPreviewInputValueOrDefault(refs.rainDropSizeRange, current.layout_rain_drop_size, '12'),
+      rainDensity: shared.getPreviewInputValueOrDefault(refs.rainDensityRange, current.layout_rain_density, '20'),
     } : {
       gridCols: shared.getRadioValue(refs.gridColsRadios, current.layout_grid_cols || '4'),
       cardStyle: current.layout_card_style || 'style1',
@@ -36,6 +47,7 @@
       hideCardLinks: !!refs.hideLinksSwitch?.checked,
       hideCardCategory: !!refs.hideCategorySwitch?.checked,
       frosted: !!refs.frostedGlassSwitch?.checked,
+      searchFrosted: !!refs.searchFrostedGlassSwitch?.checked,
       frostedIntensity: shared.getPreviewInputValueOrDefault(refs.frostedGlassIntensityRange, current.layout_frosted_glass_intensity, '15'),
       cardRadius: shared.getPreviewInputValueOrDefault(refs.cardRadiusInput, current.layout_card_border_radius, '12'),
       cardTitleFont: shared.getPreviewInputValue(refs.cardTitleFontInput, current.card_title_font || ''),
@@ -44,6 +56,9 @@
       cardDescFont: shared.getPreviewInputValue(refs.cardDescFontInput, current.card_desc_font || ''),
       cardDescSize: shared.getPreviewInputValue(refs.cardDescSizeInput, current.card_desc_size || ''),
       cardDescColor: shared.getPreviewInputValue(refs.cardDescColorInput, current.card_desc_color || ''),
+      rainEffect: !!refs.rainEffectSwitch?.checked,
+      rainDropSize: shared.getPreviewInputValueOrDefault(refs.rainDropSizeRange, current.layout_rain_drop_size, '12'),
+      rainDensity: shared.getPreviewInputValueOrDefault(refs.rainDensityRange, current.layout_rain_density, '20'),
     };
     return {
       previewDevice: isMobilePreview ? 'mobile' : 'desktop',
@@ -217,7 +232,158 @@
     if (titleBlock) titleBlock.style.order = order.title;
     if (searchEngines) searchEngines.style.order = order.engines;
     if (searchBox) searchBox.style.order = order.search;
-    if (categoryNav) categoryNav.style.order = order.category;
+   if (categoryNav) categoryNav.style.order = order.category;
+ }
+
+ function getPreviewRainSize(settings) {
+    const configured = Number(settings.rainDropSize);
+    if (!Number.isFinite(configured)) return 12;
+    return Math.min(32, Math.max(8, configured));
+  }
+
+ function getPreviewRainDensity(settings) {
+    const configured = Number(settings.rainDensity);
+    if (!Number.isFinite(configured)) return MIN_PREVIEW_RAIN_DENSITY;
+    return Math.min(MAX_PREVIEW_RAIN_DENSITY, Math.max(MIN_PREVIEW_RAIN_DENSITY, configured));
+  }
+
+ function clearPreviewRain() {
+    if (previewRainTimer !== null) {
+      window.clearTimeout(previewRainTimer);
+      previewRainTimer = null;
+    }
+    previewRainLayer?.remove();
+    previewRainLayer = null;
+    previewRainRoot = null;
+    previewRainSettings = null;
+  }
+
+ function getPreviewRainTargets(root) {
+    const rootRect = root.getBoundingClientRect();
+    return Array.from(root.querySelectorAll(
+      '.search-input-target, .live-category-button, .live-sidebar-item, .live-card'
+    )).map((element) => ({ element, rect: element.getBoundingClientRect() })).filter(({ rect }) => {
+      return rect.width > 8
+        && rect.height > 6
+        && rect.bottom > rootRect.top
+        && rect.top < rootRect.bottom
+        && rect.right > rootRect.left
+        && rect.left < rootRect.right;
+    }).sort((a, b) => a.rect.top - b.rect.top);
+  }
+
+ function getPreviewCollisionSurface(root, x) {
+    const rootRect = root.getBoundingClientRect();
+    return getPreviewRainTargets(root).find(({ rect }) => (
+      rect.top >= rootRect.top
+      && rect.top < rootRect.bottom
+      && x >= rect.left - rootRect.left
+      && x <= rect.right - rootRect.left
+    )) || null;
+  }
+
+ function createPreviewSplash(x, y, size) {
+    if (!previewRainLayer) return;
+    const splash = document.createElement('span');
+    splash.className = 'preview-rain-splash';
+    splash.style.width = `${size * 1.3}px`;
+    splash.style.height = `${size * 0.45}px`;
+    splash.style.margin = `${-size * 0.225}px 0 0 ${-size * 0.65}px`;
+    splash.style.borderWidth = `${Math.max(1.5, size * 0.12)}px`;
+    splash.style.left = `${x}px`;
+    splash.style.top = `${y}px`;
+    for (let index = 0; index < 3; index += 1) {
+      const spray = document.createElement('i');
+      spray.style.width = `${Math.max(2, size * 0.16)}px`;
+      spray.style.height = `${size * 0.55}px`;
+      spray.style.setProperty('--spray-angle', `${-55 + index * 55}deg`);
+      spray.style.setProperty('--spray-distance', `${size * 0.55 + Math.random() * size * 0.25}px`);
+      splash.appendChild(spray);
+    }
+    previewRainLayer.appendChild(splash);
+    splash.addEventListener('animationend', () => splash.remove(), { once: true });
+  }
+
+ function createPreviewSlideTrail(root, x, surface, size) {
+    if (!previewRainLayer || !surface?.element?.isConnected) return;
+    const rootRect = root.getBoundingClientRect();
+    const rect = surface.element.getBoundingClientRect();
+    const localX = x + rootRect.left;
+    if (localX < rect.left || localX > rect.right) return;
+    const trail = document.createElement('span');
+    const distance = Math.max(10, Math.min(rect.height - 2, size * (3.5 + Math.random() * 2.5)));
+    trail.className = 'preview-rain-slide-trail';
+    trail.style.left = `${x}px`;
+    trail.style.top = `${Math.max(0, rect.top - rootRect.top + 1)}px`;
+    trail.style.width = `${Math.max(1.5, size * 0.12)}px`;
+    trail.style.height = `${Math.max(14, size * 1.8)}px`;
+    trail.style.setProperty('--rain-slide-distance', `${distance}px`);
+    trail.style.setProperty('--rain-slide-duration', `${650 + Math.random() * 550}ms`);
+    previewRainLayer.appendChild(trail);
+    trail.addEventListener('animationend', () => trail.remove(), { once: true });
+  }
+
+ function spawnPreviewRainDrop(root, settings) {
+    if (!previewRainLayer || previewRainLayer.childElementCount >= MAX_PREVIEW_RAIN_NODES) return;
+    const rootRect = root.getBoundingClientRect();
+    const size = getPreviewRainSize(settings);
+    const x = Math.random() * Math.max(1, rootRect.width);
+    const startY = -size * 3 - Math.random() * Math.max(30, rootRect.height * 0.16);
+    const surface = getPreviewCollisionSurface(root, x);
+    const landingY = surface
+      ? Math.max(startY + 20, surface.rect.top - rootRect.top - size * 2.2)
+      : rootRect.height + size * 3;
+    const distance = landingY - startY;
+    const drop = document.createElement('span');
+    drop.className = 'preview-rain-drop';
+    drop.style.width = `${Math.max(2, size * 0.2)}px`;
+    drop.style.height = `${size * 2.6}px`;
+    drop.style.marginLeft = `${-Math.max(2, size * 0.2) / 2}px`;
+    drop.style.left = `${x}px`;
+    drop.style.top = `${startY}px`;
+    drop.style.setProperty('--rain-distance', `${distance}px`);
+    drop.style.setProperty('--rain-duration', `${Math.max(520, Math.min(1450, distance * 1.35))}ms`);
+    previewRainLayer.appendChild(drop);
+    drop.addEventListener('animationend', () => {
+      if (surface) {
+        const latestRect = surface.element.getBoundingClientRect();
+        const latestX = x + root.getBoundingClientRect().left;
+        if (latestX >= latestRect.left && latestX <= latestRect.right) {
+          createPreviewSplash(x, latestRect.top - root.getBoundingClientRect().top, size);
+          createPreviewSlideTrail(root, x, surface, size);
+        }
+      }
+      drop.remove();
+    }, { once: true });
+  }
+
+ function syncPreviewRain(root, settings) {
+    const shouldRun = settings.rainEffect && settings.cardStyle === 'style1';
+    if (!shouldRun) {
+      clearPreviewRain();
+      return;
+    }
+    if (!previewRainLayer || previewRainRoot !== root) {
+      clearPreviewRain();
+      previewRainRoot = root;
+      previewRainSettings = settings;
+      previewRainLayer = document.createElement('div');
+      previewRainLayer.className = 'preview-rain-layer';
+      previewRainLayer.setAttribute('aria-hidden', 'true');
+      root.appendChild(previewRainLayer);
+    } else {
+      previewRainSettings = settings;
+    }
+    if (previewRainTimer !== null) return;
+    previewRainTimer = window.setTimeout(() => {
+      previewRainTimer = null;
+      if (!previewRainRoot?.isConnected || !data.isPreviewModalVisible()) {
+        clearPreviewRain();
+        return;
+      }
+      spawnPreviewRainDrop(previewRainRoot, previewRainSettings);
+      syncPreviewRain(previewRainRoot, previewRainSettings);
+    }, Math.max(6, (420 + Math.random() * 900) / getPreviewRainDensity(settings)));
   }
 
  function renderFullPreview() {
@@ -250,6 +416,7 @@
     const title = root.querySelector('[data-preview-role="siteTitle"]');
     const description = root.querySelector('[data-preview-role="siteDescription"]');
     const searchEngines = root.querySelector('[data-preview-role="searchEngines"]');
+    const searchInput = root.querySelector('.search-input-target');
     const categoryNav = root.querySelector('[data-preview-role="categoryNav"]');
     const sidebarCategories = root.querySelector('[data-preview-role="sidebarCategories"]');
     const sidebarTitle = root.querySelector('[data-preview-role="sidebarTitle"]');
@@ -268,6 +435,7 @@
     root.classList.toggle('category-below-search', settings.categoryPosition === 'below_search');
     root.classList.toggle('is-mobile-preview', isMobilePreview);
     root.classList.toggle('uses-card-style-3', settings.cardStyle === 'style3');
+    searchInput?.classList.toggle('search-frosted-glass-effect', settings.searchFrosted && settings.cardStyle !== 'style3');
     if (!isMobilePreview) root.classList.remove('mobile-menu-open');
     const fallbackGridCols = isMobilePreview ? 3 : 4;
     const maxGridCols = isMobilePreview ? 3 : 7;
@@ -344,6 +512,7 @@
     if (footerText) footerText.textContent = settings.footerText;
 
     renderPreviewCards(cardGrid, settings, previewState);
+    syncPreviewRain(root, settings);
     if (
       livePreviewPendingCardAnimation
       && previewState?.isLoaded

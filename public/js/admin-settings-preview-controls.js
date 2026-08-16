@@ -136,6 +136,7 @@
       return;
     }
 
+    document.getElementById('rainEffectOption')?.classList.toggle('hidden', style !== 'style1');
     document.getElementById('desktopStyle3FixedHideHint')?.classList.toggle('hidden', !isStyle3);
     [
       'hideCategoryOption',
@@ -245,7 +246,11 @@
       refs.hideLinksSwitch,
       refs.hideCategorySwitch,
       refs.frostedGlassSwitch,
+      refs.searchFrostedGlassSwitch,
       refs.frostedGlassIntensityRange,
+      refs.rainEffectSwitch,
+      refs.rainDropSizeRange,
+      refs.rainDensityRange,
       refs.cardRadiusInput,
       refs.cardTitleFontInput,
       refs.cardTitleSizeInput,
@@ -259,6 +264,7 @@
       refs.mobileHideLinksSwitch,
       refs.mobileHideCategorySwitch,
       refs.mobileFrostedGlassSwitch,
+      refs.mobileSearchFrostedGlassSwitch,
       refs.mobileFrostedGlassIntensityRange,
       refs.mobileCardAnimationSelect,
       refs.mobileCardRadiusInput,

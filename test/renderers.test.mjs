@@ -361,6 +361,34 @@ test('bookmark title settings explain and drive external search colors only', ()
   assert.doesNotMatch(previewSource, /searchEngines\.style\.(?:fontFamily|fontSize)/);
 });
 
+test('rain settings support full-window vertical rain, adjustable density and slide trails', () => {
+  const html = readFileSync('public/admin/index.html', 'utf8');
+  const previewSource = readFileSync('public/js/admin-settings-preview-render.js', 'utf8');
+  const controlsSource = readFileSync('public/js/admin-settings-preview-controls.js', 'utf8');
+  const previewCss = readFileSync('public/css/admin-preview-shell.css', 'utf8');
+  const homeCss = readFileSync('public/css/style.css', 'utf8');
+  const rainSource = readFileSync('public/js/rain-effect.js', 'utf8');
+  const workerSource = readFileSync('functions/index.js', 'utf8');
+
+  assert.match(html, /id="rainDensity" min="20" max="200" step="5" value="20"/);
+  assert.match(previewSource, /rainEffect: !!refs\.rainEffectSwitch\?\.checked/);
+  assert.match(previewSource, /rainDensity: shared\.getPreviewInputValueOrDefault\(refs\.rainDensityRange/);
+  assert.match(previewSource, /syncPreviewRain\(root, settings\)/);
+  assert.match(previewSource, /MAX_PREVIEW_RAIN_DENSITY = 200/);
+  assert.match(previewSource, /const x = Math\.random\(\) \* Math\.max\(1, rootRect\.width\)/);
+  assert.match(controlsSource, /desktopCardInputs = \[[\s\S]*refs\.rainDensityRange/);
+  assert.match(previewCss, /\.preview-rain-layer\s*\{/);
+  assert.match(previewCss, /\.preview-rain-slide-trail\s*\{/);
+  assert.match(homeCss, /#rainEffectLayer\s*\{[\s\S]*position: fixed;[\s\S]*inset: 0;/);
+  assert.match(homeCss, /\.rain-slide-trail\s*\{/);
+  assert.doesNotMatch(homeCss, /rain-fall[\s\S]*?rotate\(12deg\)/);
+  assert.match(rainSource, /MAX_RAIN_DENSITY = 200/);
+  assert.match(rainSource, /const x = Math\.random\(\) \* width/);
+  assert.match(rainSource, /getCollisionSurface\(x\)/);
+  assert.match(rainSource, /createSlideTrail\(x, surface\)/);
+  assert.match(workerSource, /density: normalizeRainDensity\(S\.layout_rain_density, 20\)/);
+});
+
 test('home and admin preview use a sticky footer layout', () => {
   const homeCss = readFileSync('public/css/style.css', 'utf8');
   const previewShellCss = readFileSync('public/css/admin-preview-shell.css', 'utf8');
