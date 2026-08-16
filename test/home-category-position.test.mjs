@@ -257,6 +257,27 @@ test('search frosted glass follows device settings and leaves style three unchan
   assert.match(styleThreeHtml, /desktop-page-style3 mobile-page-style3/);
 });
 
+test('rain effect control is rendered only for an enabled style one configuration', async () => {
+  const disabledHtml = await renderHome([
+    { key: 'layout_enable_rain_effect', value: 'false' },
+  ]);
+  const styleOneHtml = await renderHome([
+    { key: 'layout_enable_rain_effect', value: 'true' },
+    { key: 'layout_card_style', value: 'style1' },
+  ]);
+  const styleThreeHtml = await renderHome([
+    { key: 'layout_enable_rain_effect', value: 'true' },
+    { key: 'layout_card_style', value: 'style3' },
+    { key: 'mobile_layout_card_style', value: 'style3' },
+  ]);
+
+  assert.doesNotMatch(disabledHtml, /id="rainToggleBtn"/);
+  assert.match(styleOneHtml, /id="rainToggleBtn"/);
+  assert.match(styleOneHtml, /window\.IORI_RAIN_CONFIG=\{"available":true/);
+  assert.doesNotMatch(styleThreeHtml, /id="rainToggleBtn"/);
+  assert.match(styleThreeHtml, /window\.IORI_RAIN_CONFIG=\{"available":false/);
+});
+
 test('home category navigation can render at the top', async () => {
   const html = await renderHome([
     { key: 'home_category_position', value: 'top' },
