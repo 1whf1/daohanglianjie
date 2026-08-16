@@ -326,6 +326,78 @@ body.custom-wallpaper .admin-action-icon:hover {
   color: #bfdbfe;
 }
 
+/* 风格一雨滴层：固定在内容上方但不拦截任何点击。 */
+#rainEffectLayer {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.rain-drop {
+  position: fixed;
+  width: 1.5px;
+  height: 22px;
+  margin-left: -0.75px;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, transparent, rgba(219, 239, 255, 0.95));
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.55));
+  opacity: 0;
+  transform: rotate(12deg);
+  animation: rain-fall var(--rain-duration, 600ms) linear forwards;
+}
+
+.rain-splash {
+  position: fixed;
+  width: 13px;
+  height: 6px;
+  margin: -3px 0 0 -6.5px;
+  border: 1.5px solid rgba(224, 244, 255, 0.9);
+  border-top-color: transparent;
+  border-radius: 50%;
+  filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.6));
+  animation: rain-splash-pop 520ms ease-out forwards;
+}
+
+.rain-splash i {
+  position: absolute;
+  left: 50%;
+  bottom: 1px;
+  width: 2px;
+  height: 6px;
+  border-radius: 999px;
+  background: rgba(224, 244, 255, 0.9);
+  transform-origin: 50% 100%;
+  animation: rain-splash-spray 420ms ease-out forwards;
+}
+
+@keyframes rain-fall {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(12deg); }
+  18% { opacity: 0.78; }
+  88% { opacity: 0.72; }
+  100% { opacity: 0; transform: translate3d(0, var(--rain-distance), 0) rotate(12deg); }
+}
+
+@keyframes rain-splash-pop {
+  0% { opacity: 0; transform: scale(0.2); }
+  25% { opacity: 0.95; transform: scale(0.9); }
+  100% { opacity: 0; transform: scale(1.55); }
+}
+
+@keyframes rain-splash-spray {
+  0% { opacity: 0.95; transform: rotate(var(--spray-angle)) translateY(0) scaleY(0.4); }
+  100% { opacity: 0; transform: rotate(var(--spray-angle)) translateY(calc(var(--spray-distance) * -1)) scaleY(1); }
+}
+
+.rain-action-icon.is-off {
+  opacity: 0.42;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #rainEffectLayer { display: none; }
+}
+
 .dark body.custom-wallpaper header {
     background-color: transparent !important;
 }
