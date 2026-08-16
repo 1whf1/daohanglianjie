@@ -344,8 +344,19 @@ body.custom-wallpaper .admin-action-icon:hover {
   background: linear-gradient(to bottom, transparent, rgba(219, 239, 255, 0.95));
   filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.55));
   opacity: 0;
-  transform: rotate(12deg);
+  transform: translate3d(0, 0, 0);
   animation: rain-fall var(--rain-duration, 600ms) linear forwards;
+}
+
+.rain-slide-trail {
+  position: fixed;
+  z-index: 1;
+  border-radius: 999px;
+  background: linear-gradient(to bottom, rgba(224, 244, 255, 0.85), rgba(224, 244, 255, 0.08));
+  box-shadow: 0 0 4px rgba(255, 255, 255, 0.75);
+  opacity: 0;
+  pointer-events: none;
+  animation: rain-slide-down var(--rain-slide-duration, 900ms) ease-out forwards;
 }
 
 .rain-splash {
@@ -373,10 +384,16 @@ body.custom-wallpaper .admin-action-icon:hover {
 }
 
 @keyframes rain-fall {
-  0% { opacity: 0; transform: translate3d(0, 0, 0) rotate(12deg); }
+  0% { opacity: 0; transform: translate3d(0, 0, 0); }
   18% { opacity: 0.78; }
   88% { opacity: 0.72; }
-  100% { opacity: 0; transform: translate3d(0, var(--rain-distance), 0) rotate(12deg); }
+  100% { opacity: 0; transform: translate3d(0, var(--rain-distance), 0); }
+}
+
+@keyframes rain-slide-down {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scaleY(0.35); }
+  18% { opacity: 0.72; transform: translate3d(0, 0, 0) scaleY(1); }
+  100% { opacity: 0; transform: translate3d(0, var(--rain-slide-distance), 0) scaleY(1.15); }
 }
 
 @keyframes rain-splash-pop {

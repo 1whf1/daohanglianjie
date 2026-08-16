@@ -42,6 +42,12 @@ function normalizeCssPixelValue(value, fallback) {
   return normalized;
 }
 
+function normalizeRainDensity(value, fallback = 20) {
+  const numeric = Number.parseInt(String(value ?? ''), 10);
+  if (!Number.isInteger(numeric)) return fallback;
+  return Math.min(200, Math.max(20, numeric));
+}
+
 export async function onRequest(context) {
   const { request, env } = context;
 
@@ -538,6 +544,7 @@ export async function onRequest(context) {
     desktopStyle: S.layout_card_style,
     mobileStyle: S.mobile_layout_card_style,
     dropSize: normalizeCssPixelValue(S.layout_rain_drop_size, 12),
+    density: normalizeRainDensity(S.layout_rain_density, 20),
     defaultEnabled: true,
   }).replace(/</g, '\\u003c');
 

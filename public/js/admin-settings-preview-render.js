@@ -13,7 +13,9 @@
  let previewRainLayer = null;
  let previewRainRoot = null;
  let previewRainSettings = null;
- const PREVIEW_RAIN_DENSITY_MULTIPLIER = 20;
+ const MIN_PREVIEW_RAIN_DENSITY = 20;
+ const MAX_PREVIEW_RAIN_DENSITY = 200;
+ const MAX_PREVIEW_RAIN_NODES = 120;
 
  function readPreviewSettings() {
     const refs = shared.getRefs();
@@ -37,6 +39,7 @@
       cardDescColor: shared.getPreviewInputValue(refs.mobileCardDescColorInput, current.mobile_card_desc_color || ''),
       rainEffect: !!refs.rainEffectSwitch?.checked,
       rainDropSize: shared.getPreviewInputValueOrDefault(refs.rainDropSizeRange, current.layout_rain_drop_size, '12'),
+      rainDensity: shared.getPreviewInputValueOrDefault(refs.rainDensityRange, current.layout_rain_density, '20'),
     } : {
       gridCols: shared.getRadioValue(refs.gridColsRadios, current.layout_grid_cols || '4'),
       cardStyle: current.layout_card_style || 'style1',
@@ -55,6 +58,7 @@
       cardDescColor: shared.getPreviewInputValue(refs.cardDescColorInput, current.card_desc_color || ''),
       rainEffect: !!refs.rainEffectSwitch?.checked,
       rainDropSize: shared.getPreviewInputValueOrDefault(refs.rainDropSizeRange, current.layout_rain_drop_size, '12'),
+      rainDensity: shared.getPreviewInputValueOrDefault(refs.rainDensityRange, current.layout_rain_density, '20'),
     };
     return {
       previewDevice: isMobilePreview ? 'mobile' : 'desktop',
@@ -237,6 +241,12 @@
     return Math.min(32, Math.max(8, configured));
   }
 
+ function getPreviewRainDensity(settings) {
+    const configured = Number(settings.rainDensity);
+    if (!Number.isFinite(configured)) return MIN_PREVIEW_RAIN_DENSITY;
+    return Math.min(MAX_PREVIEW_RAIN_DENSITY, Math.max(MIN_PREVIEW_RAIN_DENSITY, configured));
+  }
+
  function clearPreviewRain() {
     if (previewRainTimer !== null) {
       window.clearTimeout(previewRainTimer);
@@ -252,15 +262,24 @@
     const rootRect = root.getBoundingClientRect();
     return Array.from(root.querySelectorAll(
       '.search-input-target, .live-category-button, .live-sidebar-item, .live-card'
-    )).filter((element) => {
-      const rect = element.getBoundingClientRect();
+    )).map((element) => ({ element, rect: element.getBoundingClientRect() })).filter(({ rect }) => {
       return rect.width > 8
         && rect.height > 6
         && rect.bottom > rootRect.top
         && rect.top < rootRect.bottom
         && rect.right > rootRect.left
         && rect.left < rootRect.right;
-    });
+    }).sort((a, b) => a.rect.top - b.rect.top);
+  }
+
+ function getPreviewCollisionSurface(root, x) {
+    const rootRect = root.getBoundingClientRect();
+    return getPreviewRainTargets(root).find(({ rect }) => (
+      rect.top >= rootRect.top
+      && rect.top < rootRect.bottom
+      && x >= rect.left - rootRect.left
+      && x <= rect.right - rootRect.left
+    )) || null;
   }
 
  function createPreviewSplash(x, y, size) {
@@ -285,16 +304,36 @@
     splash.addEventListener('animationend', () => splash.remove(), { once: true });
   }
 
- function spawnPreviewRainDrop(root, settings) {
-    const targets = getPreviewRainTargets(root);
-    if (!targets.length || !previewRainLayer) return;
+ function createPreviewSlideTrail(root, x, surface, size) {
+    if (!previewRainLayer || !surface?.element?.isConnected) return;
     const rootRect = root.getBoundingClientRect();
-    const target = targets[Math.floor(Math.random() * targets.length)];
-    const rect = target.getBoundingClientRect();
+    const rect = surface.element.getBoundingClientRect();
+    const localX = x + rootRect.left;
+    if (localX < rect.left || localX > rect.right) return;
+    const trail = document.createElement('span');
+    const distance = Math.max(10, Math.min(rect.height - 2, size * (3.5 + Math.random() * 2.5)));
+    trail.className = 'preview-rain-slide-trail';
+    trail.style.left = `${x}px`;
+    trail.style.top = `${Math.max(0, rect.top - rootRect.top + 1)}px`;
+    trail.style.width = `${Math.max(1.5, size * 0.12)}px`;
+    trail.style.height = `${Math.max(14, size * 1.8)}px`;
+    trail.style.setProperty('--rain-slide-distance', `${distance}px`);
+    trail.style.setProperty('--rain-slide-duration', `${650 + Math.random() * 550}ms`);
+    previewRainLayer.appendChild(trail);
+    trail.addEventListener('animationend', () => trail.remove(), { once: true });
+  }
+
+ function spawnPreviewRainDrop(root, settings) {
+    if (!previewRainLayer || previewRainLayer.childElementCount >= MAX_PREVIEW_RAIN_NODES) return;
+    const rootRect = root.getBoundingClientRect();
     const size = getPreviewRainSize(settings);
-    const x = rect.left - rootRect.left + Math.max(4, Math.random() * Math.max(6, rect.width - 8));
-    const landingY = rect.top - rootRect.top + 2 + Math.random() * Math.max(3, rect.height - 4);
-    const startY = Math.max(-60, landingY - 80 - Math.random() * 60);
+    const x = Math.random() * Math.max(1, rootRect.width);
+    const startY = -size * 3 - Math.random() * Math.max(30, rootRect.height * 0.16);
+    const surface = getPreviewCollisionSurface(root, x);
+    const landingY = surface
+      ? Math.max(startY + 20, surface.rect.top - rootRect.top - size * 2.2)
+      : rootRect.height + size * 3;
+    const distance = landingY - startY;
     const drop = document.createElement('span');
     drop.className = 'preview-rain-drop';
     drop.style.width = `${Math.max(2, size * 0.2)}px`;
@@ -302,11 +341,18 @@
     drop.style.marginLeft = `${-Math.max(2, size * 0.2) / 2}px`;
     drop.style.left = `${x}px`;
     drop.style.top = `${startY}px`;
-    drop.style.setProperty('--rain-distance', `${landingY - startY}px`);
-    drop.style.setProperty('--rain-duration', `${420 + Math.random() * 260}ms`);
+    drop.style.setProperty('--rain-distance', `${distance}px`);
+    drop.style.setProperty('--rain-duration', `${Math.max(520, Math.min(1450, distance * 1.35))}ms`);
     previewRainLayer.appendChild(drop);
     drop.addEventListener('animationend', () => {
-      createPreviewSplash(x, landingY, size);
+      if (surface) {
+        const latestRect = surface.element.getBoundingClientRect();
+        const latestX = x + root.getBoundingClientRect().left;
+        if (latestX >= latestRect.left && latestX <= latestRect.right) {
+          createPreviewSplash(x, latestRect.top - root.getBoundingClientRect().top, size);
+          createPreviewSlideTrail(root, x, surface, size);
+        }
+      }
       drop.remove();
     }, { once: true });
   }
@@ -337,7 +383,7 @@
       }
       spawnPreviewRainDrop(previewRainRoot, previewRainSettings);
       syncPreviewRain(previewRainRoot, previewRainSettings);
-    }, Math.max(18, 500 / PREVIEW_RAIN_DENSITY_MULTIPLIER));
+    }, Math.max(6, (420 + Math.random() * 900) / getPreviewRainDensity(settings)));
   }
 
  function renderFullPreview() {
