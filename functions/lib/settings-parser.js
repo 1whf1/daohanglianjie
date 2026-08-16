@@ -48,6 +48,7 @@ export const SETTINGS_SCHEMA = {
     layout_card_style: { default: 'style1', type: 'string' },
     layout_card_animation: { default: 'radial', type: 'string' },
     layout_card_border_radius: { default: '12', type: 'string' },
+    layout_enable_rain_effect: { default: false, type: 'bool' },
     mobile_layout_hide_desc: { default: true, type: 'bool' },
     mobile_layout_hide_links: { default: true, type: 'bool' },
     mobile_layout_hide_category: { default: false, type: 'bool' },

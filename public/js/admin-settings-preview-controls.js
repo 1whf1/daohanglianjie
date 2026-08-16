@@ -136,6 +136,7 @@
       return;
     }
 
+    document.getElementById('rainEffectOption')?.classList.toggle('hidden', style !== 'style1');
     document.getElementById('desktopStyle3FixedHideHint')?.classList.toggle('hidden', !isStyle3);
     [
       'hideCategoryOption',

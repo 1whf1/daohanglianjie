@@ -13,6 +13,7 @@ test('parseSettings applies documented defaults', () => {
   assert.equal(settings.layout_card_animation, 'radial');
   assert.equal(settings.layout_hide_desc, false);
   assert.equal(settings.layout_enable_search_frosted_glass, false);
+  assert.equal(settings.layout_enable_rain_effect, false);
   assert.equal(settings.mobile_layout_grid_cols, '3');
   assert.equal(settings.mobile_layout_card_animation, 'radial');
   assert.equal(settings.mobile_layout_hide_desc, true);
@@ -87,6 +88,7 @@ test('getSettingsKeys matches parseable setting fields', () => {
   assert.ok(keys.includes('home_footer_text'));
   assert.ok(keys.includes('layout_card_animation'));
   assert.ok(keys.includes('layout_enable_search_frosted_glass'));
+  assert.ok(keys.includes('layout_enable_rain_effect'));
   assert.ok(keys.includes('card_desc_color'));
   assert.equal(new Set(keys).size, keys.length);
 });
