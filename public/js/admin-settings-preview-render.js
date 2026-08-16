@@ -21,6 +21,7 @@
       hideCardLinks: !!refs.mobileHideLinksSwitch?.checked,
       hideCardCategory: !!refs.mobileHideCategorySwitch?.checked,
       frosted: !!refs.mobileFrostedGlassSwitch?.checked,
+      searchFrosted: !!refs.mobileSearchFrostedGlassSwitch?.checked,
       frostedIntensity: shared.getPreviewInputValueOrDefault(refs.mobileFrostedGlassIntensityRange, current.mobile_layout_frosted_glass_intensity, '15'),
       cardRadius: shared.getPreviewInputValueOrDefault(refs.mobileCardRadiusInput, current.mobile_layout_card_border_radius, '12'),
       cardTitleFont: shared.getPreviewInputValue(refs.mobileCardTitleFontInput, current.mobile_card_title_font || ''),
@@ -36,6 +37,7 @@
       hideCardLinks: !!refs.hideLinksSwitch?.checked,
       hideCardCategory: !!refs.hideCategorySwitch?.checked,
       frosted: !!refs.frostedGlassSwitch?.checked,
+      searchFrosted: !!refs.searchFrostedGlassSwitch?.checked,
       frostedIntensity: shared.getPreviewInputValueOrDefault(refs.frostedGlassIntensityRange, current.layout_frosted_glass_intensity, '15'),
       cardRadius: shared.getPreviewInputValueOrDefault(refs.cardRadiusInput, current.layout_card_border_radius, '12'),
       cardTitleFont: shared.getPreviewInputValue(refs.cardTitleFontInput, current.card_title_font || ''),
@@ -250,6 +252,7 @@
     const title = root.querySelector('[data-preview-role="siteTitle"]');
     const description = root.querySelector('[data-preview-role="siteDescription"]');
     const searchEngines = root.querySelector('[data-preview-role="searchEngines"]');
+    const searchInput = root.querySelector('.search-input-target');
     const categoryNav = root.querySelector('[data-preview-role="categoryNav"]');
     const sidebarCategories = root.querySelector('[data-preview-role="sidebarCategories"]');
     const sidebarTitle = root.querySelector('[data-preview-role="sidebarTitle"]');
@@ -268,6 +271,7 @@
     root.classList.toggle('category-below-search', settings.categoryPosition === 'below_search');
     root.classList.toggle('is-mobile-preview', isMobilePreview);
     root.classList.toggle('uses-card-style-3', settings.cardStyle === 'style3');
+    searchInput?.classList.toggle('search-frosted-glass-effect', settings.searchFrosted && settings.cardStyle !== 'style3');
     if (!isMobilePreview) root.classList.remove('mobile-menu-open');
     const fallbackGridCols = isMobilePreview ? 3 : 4;
     const maxGridCols = isMobilePreview ? 3 : 7;
