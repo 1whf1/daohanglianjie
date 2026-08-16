@@ -119,24 +119,6 @@
     splash.addEventListener('animationend', () => splash.remove(), { once: true });
   }
 
-  function createSlideTrail(x, surface) {
-    if (!layer || !surface?.element?.isConnected || !enabled || !isStyleOneActive()) return;
-    const rect = surface.element.getBoundingClientRect();
-    if (x < rect.left || x > rect.right || rect.bottom <= 0 || rect.top >= window.innerHeight) return;
-    const size = getRainSize();
-    const trail = document.createElement('span');
-    const distance = Math.max(12, Math.min(rect.height - 2, size * (3.5 + Math.random() * 2.5)));
-    trail.className = 'rain-slide-trail';
-    trail.style.left = `${x}px`;
-    trail.style.top = `${Math.max(0, rect.top + 1)}px`;
-    trail.style.width = `${Math.max(1.5, size * 0.12)}px`;
-    trail.style.height = `${Math.max(14, size * 1.8)}px`;
-    trail.style.setProperty('--rain-slide-distance', `${distance}px`);
-    trail.style.setProperty('--rain-slide-duration', `${650 + Math.random() * 550}ms`);
-    layer.appendChild(trail);
-    trail.addEventListener('animationend', () => trail.remove(), { once: true });
-  }
-
   function createDrop() {
     timer = null;
     if (!enabled || document.hidden || !isStyleOneActive()) {
@@ -173,7 +155,6 @@
         const latestRect = surface.element.getBoundingClientRect();
         if (x >= latestRect.left && x <= latestRect.right) {
           createSplash(x, latestRect.top);
-          createSlideTrail(x, surface);
         }
       }
       drop.remove();
