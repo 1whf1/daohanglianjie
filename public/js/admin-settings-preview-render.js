@@ -311,8 +311,12 @@
     const x = Math.random() * Math.max(1, rootRect.width);
     const startY = -size * 3 - Math.random() * Math.max(30, rootRect.height * 0.16);
     const surface = getPreviewCollisionSurface(root, x);
+    const impactRatio = surface ? (0.12 + Math.random() * 0.76) : null;
+    const impactY = surface
+      ? surface.rect.top - rootRect.top + surface.rect.height * impactRatio
+      : null;
     const landingY = surface
-      ? Math.max(startY + 20, surface.rect.top - rootRect.top - size * 2.2)
+      ? Math.max(startY + 20, impactY - size * 2.2)
       : rootRect.height + size * 3;
     const distance = landingY - startY;
     const drop = document.createElement('span');
@@ -328,9 +332,14 @@
     drop.addEventListener('animationend', () => {
       if (surface) {
         const latestRect = surface.element.getBoundingClientRect();
-        const latestX = x + root.getBoundingClientRect().left;
+        const latestRootRect = root.getBoundingClientRect();
+        const latestX = x + latestRootRect.left;
         if (latestX >= latestRect.left && latestX <= latestRect.right) {
-          createPreviewSplash(x, latestRect.top - root.getBoundingClientRect().top, size);
+          createPreviewSplash(
+            x,
+            latestRect.top - latestRootRect.top + latestRect.height * impactRatio,
+            size,
+          );
         }
       }
       drop.remove();
