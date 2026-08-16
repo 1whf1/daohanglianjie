@@ -73,6 +73,7 @@
       cardTitleColorInput: document.getElementById('cardTitleColor'),
       cardTitleColorPicker: document.getElementById('cardTitleColorPicker'),
       cardAnimationSelect: document.getElementById('cardAnimationSelect'),
+      rainEffectSwitch: document.getElementById('rainEffectSwitch'),
       cardDescFontInput: document.getElementById('cardDescFont'),
       cardDescSizeInput: document.getElementById('cardDescSize'),
       cardDescColorInput: document.getElementById('cardDescColor'),
@@ -297,6 +298,7 @@
     currentSettings.layout_card_style = document.querySelector('#desktopCardSettingsPanel .card-style-btn.active')?.dataset.style || 'style1';
     currentSettings.layout_card_animation = refs.cardAnimationSelect?.value || 'radial';
     currentSettings.layout_card_border_radius = refs.cardRadiusInput?.value || '12';
+    currentSettings.layout_enable_rain_effect = !!refs.rainEffectSwitch?.checked;
     currentSettings.card_title_font = refs.cardTitleFontInput?.value.trim() || '';
     currentSettings.card_title_size = refs.cardTitleSizeInput?.value.trim() || '';
     currentSettings.card_title_color = refs.cardTitleColorInput?.value.trim() || '';
@@ -448,6 +450,7 @@
     setRadioValue(refs.categoryPositionRadios, categoryPosition);
     setRadioValue(refs.categoryFlowRadios, currentSettings.home_category_flow || 'single_line');
     setValue(refs.cardAnimationSelect, currentSettings.layout_card_animation || 'radial');
+    setChecked(refs.rainEffectSwitch, currentSettings.layout_enable_rain_effect);
     ns.preview?.syncAnimationOptions?.();
     setRangeValue(refs.cardRadiusInput, refs.cardRadiusValue, currentSettings.layout_card_border_radius || '12');
     setValue(refs.cardTitleFontInput, currentSettings.card_title_font || '');
