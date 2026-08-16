@@ -135,8 +135,12 @@
     const x = Math.random() * width;
     const startY = -size * 3 - Math.random() * Math.max(40, window.innerHeight * 0.18);
     const surface = getCollisionSurface(x);
+    const impactRatio = surface ? (0.12 + Math.random() * 0.76) : null;
+    const impactY = surface
+      ? surface.rect.top + surface.rect.height * impactRatio
+      : null;
     const landingY = surface
-      ? Math.max(startY + 24, surface.rect.top - size * 2.2)
+      ? Math.max(startY + 24, impactY - size * 2.2)
       : window.innerHeight + size * 3;
     const distance = landingY - startY;
     const duration = Math.max(520, Math.min(1450, distance * 1.35));
@@ -154,7 +158,7 @@
       if (surface) {
         const latestRect = surface.element.getBoundingClientRect();
         if (x >= latestRect.left && x <= latestRect.right) {
-          createSplash(x, latestRect.top);
+          createSplash(x, latestRect.top + latestRect.height * impactRatio);
         }
       }
       drop.remove();
