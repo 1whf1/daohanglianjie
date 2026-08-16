@@ -3,7 +3,7 @@
 // 前台 public/js/wallpaper-defaults.js 由 scripts/update-versions.js 从此文件同步生成，请勿手改前台副本。
 
 export const STYLE_DEFAULT_WALLPAPERS = {
-  style1: 'https://img.peapix.com/dc6e559cacb14f9c83b46d5a7f189bab_1920.jpg',
+  style1: 'https://raw.githubusercontent.com/1whf1/daohanglianjie/master/image/guofeng-white-blue.png',
   style2: 'https://img.peapix.com/1f4688b7a0d64bda9c508f9498b04f49_1920.jpg',
   style3: 'https://main.ssss.nyc.mn/background.webp',
 };
