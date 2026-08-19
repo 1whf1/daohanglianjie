@@ -21,6 +21,7 @@ test('parseSettings applies documented defaults', () => {
   assert.equal(settings.mobile_layout_hide_desc, true);
   assert.equal(settings.mobile_layout_hide_links, true);
   assert.equal(settings.mobile_layout_enable_search_frosted_glass, false);
+  assert.equal(settings.mobile_layout_enable_rain_effect, false);
   assert.equal(settings.mobile_layout_card_style, 'style2');
   assert.equal(settings.card_title_size, '16');
   assert.equal(settings.card_desc_size, '14');
@@ -50,6 +51,7 @@ test('parseSettings lets mobile card settings inherit desktop settings when miss
     { key: 'layout_hide_links', value: 'false' },
     { key: 'layout_enable_frosted_glass', value: 'true' },
     { key: 'layout_enable_search_frosted_glass', value: 'true' },
+    { key: 'layout_enable_rain_effect', value: 'true' },
     { key: 'layout_frosted_glass_intensity', value: '28' },
     { key: 'layout_card_style', value: 'style1' },
     { key: 'layout_card_animation', value: 'flipIn' },
@@ -60,6 +62,7 @@ test('parseSettings lets mobile card settings inherit desktop settings when miss
   assert.equal(settings.mobile_layout_hide_links, true);
   assert.equal(settings.mobile_layout_enable_frosted_glass, true);
   assert.equal(settings.mobile_layout_enable_search_frosted_glass, true);
+  assert.equal(settings.mobile_layout_enable_rain_effect, true);
   assert.equal(settings.mobile_layout_frosted_glass_intensity, '28');
   assert.equal(settings.mobile_layout_card_style, 'style2');
   assert.equal(settings.mobile_layout_card_animation, 'flipIn');
@@ -91,6 +94,7 @@ test('getSettingsKeys matches parseable setting fields', () => {
   assert.ok(keys.includes('layout_card_animation'));
   assert.ok(keys.includes('layout_enable_search_frosted_glass'));
   assert.ok(keys.includes('layout_enable_rain_effect'));
+  assert.ok(keys.includes('mobile_layout_enable_rain_effect'));
   assert.ok(keys.includes('layout_rain_drop_size'));
   assert.ok(keys.includes('layout_rain_density'));
   assert.ok(keys.includes('card_desc_color'));

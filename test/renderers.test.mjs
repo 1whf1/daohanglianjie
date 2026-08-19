@@ -371,7 +371,9 @@ test('rain settings support full-window vertical rain, adjustable density and ta
   const workerSource = readFileSync('functions/index.js', 'utf8');
 
   assert.match(html, /id="rainDensity" min="20" max="200" step="5" value="20"/);
+  assert.match(html, /id="mobileRainEffectOption"[\s\S]*id="mobileRainEffectSwitch"/);
   assert.match(previewSource, /rainEffect: !!refs\.rainEffectSwitch\?\.checked/);
+  assert.match(previewSource, /rainEffect: !!refs\.mobileRainEffectSwitch\?\.checked/);
   assert.match(previewSource, /rainDensity: shared\.getPreviewInputValueOrDefault\(refs\.rainDensityRange/);
   assert.match(previewSource, /syncPreviewRain\(root, settings\)/);
   assert.match(previewSource, /MAX_PREVIEW_RAIN_DENSITY = 200/);
@@ -385,6 +387,8 @@ test('rain settings support full-window vertical rain, adjustable density and ta
   assert.doesNotMatch(homeCss, /\.rain-slide-trail\s*\{/);
   assert.doesNotMatch(homeCss, /rain-fall[\s\S]*?rotate\(12deg\)/);
   assert.match(rainSource, /MAX_RAIN_DENSITY = 200/);
+  assert.match(rainSource, /config\.mobileEnabled === true/);
+  assert.match(rainSource, /config\.desktopEnabled === true/);
   assert.match(rainSource, /TARGETED_RAIN_RATIO = 0\.7/);
   assert.match(rainSource, /getRandomRainSurface\(\)/);
   assert.match(rainSource, /surface\.rect\.left \+ Math\.random\(\) \* surface\.rect\.width/);

@@ -124,6 +124,7 @@
  function syncCardContentHideOptions(device, style) {
     const isStyle3 = style === 'style3';
     if (device === 'mobile') {
+      document.getElementById('mobileRainEffectOption')?.classList.toggle('hidden', style !== 'style1');
       document.getElementById('mobileStyle3FixedHideHint')?.classList.toggle('hidden', !isStyle3);
       [
         'mobileHideCategoryOption',
@@ -265,6 +266,7 @@
       refs.mobileHideCategorySwitch,
       refs.mobileFrostedGlassSwitch,
       refs.mobileSearchFrostedGlassSwitch,
+      refs.mobileRainEffectSwitch,
       refs.mobileFrostedGlassIntensityRange,
       refs.mobileCardAnimationSelect,
       refs.mobileCardRadiusInput,

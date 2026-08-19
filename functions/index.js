@@ -363,10 +363,13 @@ export async function onRequest(context) {
     </div>`;
 
   // === 15. 布局控制 ===
-  const rainEffectAvailable = Boolean(
-    S.layout_enable_rain_effect
-      && (S.layout_card_style === 'style1' || S.mobile_layout_card_style === 'style1')
+  const desktopRainEffectEnabled = Boolean(
+    S.layout_enable_rain_effect && S.layout_card_style === 'style1'
   );
+  const mobileRainEffectEnabled = Boolean(
+    S.mobile_layout_enable_rain_effect && S.mobile_layout_card_style === 'style1'
+  );
+  const rainEffectAvailable = desktopRainEffectEnabled || mobileRainEffectEnabled;
   let sidebarClass = '';
   let mainClass = 'lg:ml-64';
   let sidebarToggleClass = '';
@@ -378,7 +381,7 @@ export async function onRequest(context) {
       <svg id="themeIconMoon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden dark:block"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
     </button>`;
   const rainToggleHtml = rainEffectAvailable ? `
-    <button id="rainToggleBtn" class="top-action-icon rain-action-icon" title="切换下雨效果" aria-label="切换下雨效果" aria-pressed="true">
+    <button id="rainToggleBtn" class="top-action-icon rain-action-icon" title="切换飞雪效果" aria-label="切换飞雪效果" aria-pressed="true">
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 16.5a4.5 4.5 0 0 1 .9-8.91A5.5 5.5 0 0 1 18.5 9a3.5 3.5 0 0 1-.5 7H7Z"/><path d="m8 19-1 2M12 18.5l-1 2M16 19l-1 2"/></svg>
     </button>` : '';
 
@@ -567,6 +570,8 @@ export async function onRequest(context) {
   }).replace(/</g, '\\u003c');
   const safeRainConfigJson = JSON.stringify({
     available: rainEffectAvailable,
+    desktopEnabled: desktopRainEffectEnabled,
+    mobileEnabled: mobileRainEffectEnabled,
     desktopStyle: S.layout_card_style,
     mobileStyle: S.mobile_layout_card_style,
     dropSize: normalizeCssPixelValue(S.layout_rain_drop_size, 12),

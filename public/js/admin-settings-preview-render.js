@@ -38,7 +38,7 @@
       cardDescFont: shared.getPreviewInputValue(refs.mobileCardDescFontInput, current.mobile_card_desc_font || ''),
       cardDescSize: shared.getPreviewInputValue(refs.mobileCardDescSizeInput, current.mobile_card_desc_size || ''),
       cardDescColor: shared.getPreviewInputValue(refs.mobileCardDescColorInput, current.mobile_card_desc_color || ''),
-      rainEffect: !!refs.rainEffectSwitch?.checked,
+      rainEffect: !!refs.mobileRainEffectSwitch?.checked,
       rainDropSize: shared.getPreviewInputValueOrDefault(refs.rainDropSizeRange, current.layout_rain_drop_size, '12'),
       rainDensity: shared.getPreviewInputValueOrDefault(refs.rainDensityRange, current.layout_rain_density, '20'),
     } : {

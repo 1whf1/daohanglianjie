@@ -23,11 +23,10 @@
     }
   }
 
-  function isStyleOneActive() {
-    const style = window.matchMedia('(max-width: 767px)').matches
-      ? config.mobileStyle
-      : config.desktopStyle;
-    return style === 'style1';
+  function isRainEffectEnabledForViewport() {
+    return window.matchMedia('(max-width: 767px)').matches
+      ? config.mobileEnabled === true
+      : config.desktopEnabled === true;
   }
 
   function getRainSize() {
@@ -43,7 +42,7 @@
   }
 
   function getRainSurfaces() {
-    if (!isStyleOneActive()) return null;
+    if (!isRainEffectEnabledForViewport()) return null;
     return Array.from(document.querySelectorAll(targetSelector))
       .map((element) => ({ element, rect: element.getBoundingClientRect() }))
       .filter(({ rect }) => (
@@ -76,17 +75,20 @@
   function updateButton() {
     const button = document.getElementById('rainToggleBtn');
     if (!button) return;
+    const isAvailable = isRainEffectEnabledForViewport();
+    button.style.display = isAvailable ? '' : 'none';
     button.setAttribute('aria-pressed', enabled ? 'true' : 'false');
     button.classList.toggle('is-off', !enabled);
-    button.title = enabled ? '关闭下雨效果' : '开启下雨效果';
+    button.title = enabled ? '关闭飞雪效果' : '开启飞雪效果';
     button.setAttribute('aria-label', button.title);
   }
 
   function setEnabled(nextEnabled, persist = true) {
     enabled = Boolean(nextEnabled);
-    document.documentElement.classList.toggle('rain-effect-active', enabled && isStyleOneActive());
+    const isAvailable = isRainEffectEnabledForViewport();
+    document.documentElement.classList.toggle('rain-effect-active', enabled && isAvailable);
     updateButton();
-    if (!enabled) {
+    if (!enabled || !isAvailable) {
       clearTimer();
       removeLayerContents();
       return;
@@ -103,8 +105,8 @@
 
   function createDrop() {
     timer = null;
-    if (!enabled || document.hidden || !isStyleOneActive()) {
-      scheduleDrop(1200);
+    if (!enabled || document.hidden || !isRainEffectEnabledForViewport()) {
+      clearTimer();
       return;
     }
     if (!layer || layer.childElementCount >= MAX_ACTIVE_RAIN_NODES) {
@@ -162,14 +164,17 @@
       clearTimer();
       return;
     }
-    if (enabled) scheduleNextDrop(350);
+    if (enabled && isRainEffectEnabledForViewport()) scheduleNextDrop(350);
   }
 
   function handleResize() {
     window.clearTimeout(resizeTimer);
     resizeTimer = window.setTimeout(() => {
-      document.documentElement.classList.toggle('rain-effect-active', enabled && isStyleOneActive());
+      const isAvailable = isRainEffectEnabledForViewport();
+      document.documentElement.classList.toggle('rain-effect-active', enabled && isAvailable);
+      updateButton();
       removeLayerContents();
+      if (enabled && isAvailable) scheduleNextDrop(150);
     }, 150);
   }
 

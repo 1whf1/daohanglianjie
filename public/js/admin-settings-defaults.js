@@ -21,6 +21,7 @@
     'mobile_layout_hide_category',
     'mobile_layout_enable_frosted_glass',
     'mobile_layout_enable_search_frosted_glass',
+    'mobile_layout_enable_rain_effect',
   ];
 
   // 空串语义是「回退到默认值」，所以服务端给空值时跳过赋值，保留 createDefaultSettings 的默认
@@ -90,6 +91,7 @@
     ['mobile_layout_hide_category', 'layout_hide_category'],
     ['mobile_layout_enable_frosted_glass', 'layout_enable_frosted_glass'],
     ['mobile_layout_enable_search_frosted_glass', 'layout_enable_search_frosted_glass'],
+    ['mobile_layout_enable_rain_effect', 'layout_enable_rain_effect'],
     ['mobile_layout_frosted_glass_intensity', 'layout_frosted_glass_intensity'],
     ['mobile_layout_card_animation', 'layout_card_animation'],
     ['mobile_layout_card_border_radius', 'layout_card_border_radius'],
@@ -162,6 +164,7 @@
       mobile_layout_hide_category: false,
       mobile_layout_enable_frosted_glass: false,
       mobile_layout_enable_search_frosted_glass: false,
+      mobile_layout_enable_rain_effect: false,
       mobile_layout_frosted_glass_intensity: '15',
       mobile_layout_grid_cols: '3',
       mobile_layout_card_style: 'style2',

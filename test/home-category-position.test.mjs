@@ -273,14 +273,30 @@ test('rain effect control is rendered only for an enabled style one configuratio
     { key: 'layout_card_style', value: 'style3' },
     { key: 'mobile_layout_card_style', value: 'style3' },
   ]);
+  const mobileOnlyHtml = await renderHome([
+    { key: 'layout_enable_rain_effect', value: 'false' },
+    { key: 'mobile_layout_enable_rain_effect', value: 'true' },
+    { key: 'layout_card_style', value: 'style1' },
+    { key: 'mobile_layout_card_style', value: 'style1' },
+  ]);
+  const desktopOnlyHtml = await renderHome([
+    { key: 'layout_enable_rain_effect', value: 'true' },
+    { key: 'mobile_layout_enable_rain_effect', value: 'false' },
+    { key: 'layout_card_style', value: 'style1' },
+    { key: 'mobile_layout_card_style', value: 'style1' },
+  ]);
 
   assert.doesNotMatch(disabledHtml, /id="rainToggleBtn"/);
   assert.match(styleOneHtml, /id="rainToggleBtn"/);
   assert.match(styleOneHtml, /window\.IORI_RAIN_CONFIG=\{"available":true/);
+  assert.match(styleOneHtml, /"desktopEnabled":true,"mobileEnabled":false/);
   assert.match(styleOneHtml, /"dropSize":"12"/);
   assert.ok(styleOneHtml.indexOf('window.IORI_RAIN_CONFIG=') < styleOneHtml.indexOf('/js/rain-effect.js'));
   assert.doesNotMatch(styleThreeHtml, /id="rainToggleBtn"/);
   assert.match(styleThreeHtml, /window\.IORI_RAIN_CONFIG=\{"available":false/);
+  assert.match(mobileOnlyHtml, /id="rainToggleBtn"/);
+  assert.match(mobileOnlyHtml, /"desktopEnabled":false,"mobileEnabled":true/);
+  assert.match(desktopOnlyHtml, /"desktopEnabled":true,"mobileEnabled":false/);
 });
 
 test('home category navigation can render at the top', async () => {

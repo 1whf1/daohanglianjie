@@ -87,6 +87,7 @@
       mobileHideCategorySwitch: document.getElementById('mobileHideCategorySwitch'),
       mobileFrostedGlassSwitch: document.getElementById('mobileFrostedGlassSwitch'),
       mobileSearchFrostedGlassSwitch: document.getElementById('mobileSearchFrostedGlassSwitch'),
+      mobileRainEffectSwitch: document.getElementById('mobileRainEffectSwitch'),
       mobileFrostedGlassIntensityRange: document.getElementById('mobileFrostedGlassIntensity'),
       mobileFrostedGlassIntensityValue: document.getElementById('mobileFrostedGlassIntensityValue'),
       mobileGridColsRadios: document.getElementsByName('mobileGridCols'),
@@ -317,6 +318,7 @@
     currentSettings.mobile_layout_hide_category = !!refs.mobileHideCategorySwitch?.checked;
     currentSettings.mobile_layout_enable_frosted_glass = !!refs.mobileFrostedGlassSwitch?.checked;
     currentSettings.mobile_layout_enable_search_frosted_glass = !!refs.mobileSearchFrostedGlassSwitch?.checked;
+    currentSettings.mobile_layout_enable_rain_effect = !!refs.mobileRainEffectSwitch?.checked;
     currentSettings.mobile_layout_frosted_glass_intensity = refs.mobileFrostedGlassIntensityRange?.value || '15';
     for (const radio of refs.mobileGridColsRadios || []) {
       if (radio.checked) {
@@ -472,6 +474,7 @@
     setChecked(refs.mobileHideCategorySwitch, currentSettings.mobile_layout_hide_category);
     setChecked(refs.mobileFrostedGlassSwitch, currentSettings.mobile_layout_enable_frosted_glass);
     setChecked(refs.mobileSearchFrostedGlassSwitch, currentSettings.mobile_layout_enable_search_frosted_glass);
+    setChecked(refs.mobileRainEffectSwitch, currentSettings.mobile_layout_enable_rain_effect);
     setRangeValue(refs.mobileFrostedGlassIntensityRange, refs.mobileFrostedGlassIntensityValue, currentSettings.mobile_layout_frosted_glass_intensity || '15');
     updateToggleContainer([refs.mobileFrostedGlassSwitch, refs.mobileSearchFrostedGlassSwitch], 'mobileFrostedGlassIntensityContainer');
     setRadioValue(refs.mobileGridColsRadios, currentSettings.mobile_layout_grid_cols || '3');
