@@ -167,6 +167,15 @@
   margin-top: 2rem;
 }
 
+/*
+ * The homepage header has enough vertical space below its category row before
+ * the card section starts. The compact preview previously kept the base 18rem
+ * hero height, so the category row overflowed into the first card row.
+ */
+.home-live-preview.category-below-search:not([data-device="mobile"]):not(.uses-card-style-3) .live-preview-hero {
+  min-height: 22rem;
+}
+
 .home-live-preview.category-above-search .live-category-nav {
   margin-bottom: 2rem;
 }

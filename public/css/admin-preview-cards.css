@@ -14,7 +14,8 @@
 .live-card-grid {
   display: grid;
   grid-template-columns: repeat(var(--preview-grid-cols, 4), minmax(0, 1fr));
-  gap: 0.8rem;
+  /* Keep the preview aligned with the homepage `sm:gap-6` desktop grid. */
+  gap: 1.5rem;
   padding: 0 1.35rem 1.35rem;
 }
 
@@ -593,7 +594,8 @@
 }
 
 .home-live-preview[data-device="mobile"] .live-card-grid {
-  gap: 0.65rem;
+  /* Homepage mobile cards use Tailwind's `gap-3`. */
+  gap: 0.75rem;
   padding: 0 1rem 1rem;
 }
 

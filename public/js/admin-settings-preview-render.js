@@ -402,7 +402,8 @@
     const frostedBlur = shared.getPreviewNumberOrDefault(settings.frostedIntensity, 15);
     root.style.setProperty('--preview-card-radius', `${cardRadius}px`);
     root.style.setProperty('--card-radius', `${cardRadius}px`);
-    root.style.setProperty('--card-padding', '1rem');
+    // Match the homepage `--card-padding` default (1.25rem / 20px).
+    root.style.setProperty('--card-padding', '1.25rem');
     root.style.setProperty('--frosted-glass-blur', `${frostedBlur}px`);
     root.style.setProperty('--preview-frosted-blur', `${frostedBlur}px`);
     root.style.setProperty('--preview-bg-blur', settings.bgBlur ? `${Number(settings.bgBlurIntensity) || 0}px` : '0px');
