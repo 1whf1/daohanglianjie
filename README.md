@@ -5,10 +5,10 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/1whf1/daohanglianjie/stargazers"><img src="https://github.com/1whf1/daohanglianjie/stargazers" alt="Stars"></a>
-  <a href="https://img.shields.io/github/stars/1whf1/daohanglianjie?style=flat-square&logo=github&color=yellow"><img src="https://github.com/1whf1/daohanglianjie/network/members" alt="Forks"></a>
-  <a href="https://img.shields.io/github/forks/1whf1/daohanglianjie?style=flat-square&logo=github&color=blue"><img src="https://github.com/1whf1/daohanglianjie/blob/master/LICENSE" alt="License"></a>
-  <a href="https://img.shields.io/github/license/1whf1/daohanglianjie?style=flat-square&color=green"><img src="https://github.com/1whf1/daohanglianjie/issues" alt="Issues"></a>
+  <a href="https://github.com/1whf1/daohanglianjie/stargazers"><img src="https://img.shields.io/github/stars/1whf1/daohanglianjie?style=flat-square&logo=github&color=yellow" alt="Stars"></a>
+  <a href="https://github.com/1whf1/daohanglianjie/network/members"><img src="https://img.shields.io/github/forks/1whf1/daohanglianjie?style=flat-square&logo=github&color=blue" alt="Forks"></a>
+  <a href="https://github.com/1whf1/daohanglianjie/blob/master/LICENSE"><img src="https://img.shields.io/github/license/1whf1/daohanglianjie?style=flat-square&color=green" alt="License"></a>
+  <a href="https://github.com/1whf1/daohanglianjie/issues"><img src="https://img.shields.io/github/issues/1whf1/daohanglianjie?style=flat-square&color=orange" alt="Issues"></a>
 </p>
 
 <p align="center">
@@ -23,7 +23,7 @@
 </p>
 
 <p align="center">
-  <strong>🌐 在线体验:</strong> <a href="https://img.shields.io/github/issues/1whf1/daohanglianjie?style=flat-square&color=orange">https://iori.hidns.vip</a>
+  <strong>🌐 在线体验:</strong> <a href="https://whf9556.cc.cd/">https://whf9556.cc.cd</a>
 </p>
 
 ---
@@ -86,7 +86,7 @@
 
 ### 步骤 1：Fork 本仓库
 
-[![Fork on GitHub](https://img.shields.io/badge/Fork-GitHub-181717?style=for-the-badge&logo=github)](https://whf9556.cc.cd/)
+[![Fork on GitHub](https://img.shields.io/badge/Fork-GitHub-181717?style=for-the-badge&logo=github)](https://github.com/1whf1/daohanglianjie/fork)
 
 点击上方 **"Fork on GitHub"** 按钮，并点上 ⭐ Star！
 
@@ -257,7 +257,7 @@ npx wrangler d1 execute book --local --file=schema.sql
 
 即可关闭访问验证。
 
-https://github.com/1whf1/daohanglianjie/fork
+### 5) 登录状态说明
 
 访问者首次进入网站时需要输入密码。
 
@@ -324,7 +324,7 @@ https://github.com/1whf1/daohanglianjie/fork
 ## 📋 更新日志
 
 <!-- changelog:start -->
-### 5) 登录状态说明
+- ❄️ **2026-08-16**：新增飞雪效果，并为风格一、风格二增加搜索框毛玻璃效果
 - 🔐 **2026-08-15**：新增网站访问密码保护功能可独立开启/关闭站点访问验证。
 - 📂 **2026-07-14**：增加卡片风格三，风格增加默认壁纸
 - 🔧 **2026-06-23**：清理 AI 设置调试日志
@@ -391,11 +391,11 @@ https://github.com/1whf1/daohanglianjie/fork
 
 ## 📞 联系方式
 
-- ❄️ **2026-08-16**：新增飞雪效果，并为风格一、风格二增加搜索框毛玻璃效果
-- **项目链接**：- **项目作者**：[@1whf1](https://github.com/1whf1)
+- **项目作者**：[@1whf1](https://github.com/1whf1)
+- **项目链接**：[https://github.com/1whf1/daohanglianjie](https://github.com/1whf1/daohanglianjie)
 
 <p align="center">如果你喜欢这个项目，请给它一个 ⭐️！</p>
 
 ## ⭐ Star 趋势
 
-[![Star History Chart]([https://github.com/1whf1/daohanglianjie](https://github.com/1whf1/daohanglianjie))](https://api.star-history.com/svg?repos=1whf1/daohanglianjie&type=date&legend=top-left)
+[![Star History Chart](https://api.star-history.com/svg?repos=1whf1/daohanglianjie&type=date&legend=top-left)](https://www.star-history.com/#1whf1/daohanglianjie&type=date&legend=top-left)
