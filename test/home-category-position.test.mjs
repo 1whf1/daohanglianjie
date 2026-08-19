@@ -143,6 +143,26 @@ test('home uses style default wallpaper when custom wallpaper is empty', async (
   assert.doesNotMatch(customHtml, /main\.ssss\.nyc\.mn\/background\.webp/);
 });
 
+test('home centers the default style 1 character on mobile only', async () => {
+  const style1Html = await renderHome([
+    { key: 'layout_card_style', value: 'style1' },
+    { key: 'mobile_layout_card_style', value: 'style1' },
+  ]);
+  const customHtml = await renderHome([
+    { key: 'layout_card_style', value: 'style1' },
+    { key: 'mobile_layout_card_style', value: 'style1' },
+    { key: 'layout_custom_wallpaper', value: 'https://example.com/custom-bg.jpg' },
+  ]);
+  const differentMobileStyleHtml = await renderHome([
+    { key: 'layout_card_style', value: 'style1' },
+    { key: 'mobile_layout_card_style', value: 'style2' },
+  ]);
+
+  assert.match(style1Html, /mobile-default-style1-wallpaper/);
+  assert.doesNotMatch(customHtml, /mobile-default-style1-wallpaper/);
+  assert.doesNotMatch(differentMobileStyleHtml, /mobile-default-style1-wallpaper/);
+});
+
 test('home footer text can be configured from settings', async () => {
   const defaultHtml = await renderHome();
   const configuredHtml = await renderHome([

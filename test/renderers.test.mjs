@@ -407,6 +407,17 @@ test('rain settings support full-window vertical rain, adjustable density and ta
   assert.match(workerSource, /density: normalizeRainDensity\(S\.layout_rain_density, 20\)/);
 });
 
+test('mobile style 1 uses the character-centered default wallpaper in home and preview', () => {
+  const homeCss = readFileSync('public/css/style.css', 'utf8');
+  const previewCss = readFileSync('public/css/admin-preview-shell.css', 'utf8');
+  const previewSource = readFileSync('public/js/admin-settings-preview-render.js', 'utf8');
+
+  assert.match(homeCss, /body\.mobile-default-style1-wallpaper #fixed-background img\s*\{[^}]*object-position:\s*8% center/);
+  assert.match(previewCss, /\.home-live-preview\.is-mobile-preview\.uses-card-style-1\.uses-default-style1-wallpaper \.home-live-preview-bg\s*\{[^}]*background-position:\s*8% center/);
+  assert.match(previewSource, /usesDefaultStyle1Wallpaper:\s*!customWallpaper && desktopCardStyle === 'style1'/);
+  assert.match(previewSource, /classList\.toggle\('uses-default-style1-wallpaper', settings\.usesDefaultStyle1Wallpaper\)/);
+});
+
 test('home and admin preview use a sticky footer layout', () => {
   const homeCss = readFileSync('public/css/style.css', 'utf8');
   const previewShellCss = readFileSync('public/css/admin-preview-shell.css', 'utf8');

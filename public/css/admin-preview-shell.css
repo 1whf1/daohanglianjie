@@ -191,6 +191,10 @@
   transform: scale(var(--preview-bg-scale, 1));
 }
 
+.home-live-preview.is-mobile-preview.uses-card-style-1.uses-default-style1-wallpaper .home-live-preview-bg {
+  background-position: 8% center;
+}
+
 .home-live-preview-vignette {
   background: transparent;
   opacity: 0;

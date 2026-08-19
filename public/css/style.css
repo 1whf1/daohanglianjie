@@ -1418,6 +1418,13 @@ body .search-engine-option.active {
   }
 }
 
+/* 手机风格一默认古风壁纸：把人物设为移动端裁切焦点，桌面端与自定义壁纸保持原样 */
+@media (max-width: 767px) {
+  body.mobile-default-style1-wallpaper #fixed-background img {
+    object-position: 8% center;
+  }
+}
+
 /* 手机风格三：搜索/外部搜索引擎与桌面风格三对齐 */
 @media (max-width: 767px) {
   body.mobile-page-style3.custom-wallpaper #fixed-background {

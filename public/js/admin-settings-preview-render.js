@@ -61,6 +61,16 @@
       rainDropSize: shared.getPreviewInputValueOrDefault(refs.rainDropSizeRange, current.layout_rain_drop_size, '12'),
       rainDensity: shared.getPreviewInputValueOrDefault(refs.rainDensityRange, current.layout_rain_density, '20'),
     };
+    const customWallpaper = shared.normalizePreviewUrl(
+      shared.getPreviewInputValue(refs.customWallpaperInput, current.layout_custom_wallpaper || '')
+    );
+    const desktopCardStyle = document.querySelector('#desktopCardSettingsPanel .card-style-btn.active')?.dataset?.style
+      || current.layout_card_style
+      || 'style1';
+    const wallpaper = customWallpaper
+      || ns.wallpaper?.resolveWallpaperUrl?.('', desktopCardStyle)
+      || window.IoriWallpaperDefaults?.resolveWallpaperUrl?.('', desktopCardStyle)
+      || '';
     return {
       previewDevice: isMobilePreview ? 'mobile' : 'desktop',
       siteName: shared.getPreviewInputValueOrDefault(refs.homeSiteNameInput, current.home_site_name, '灰色轨迹'),
@@ -79,17 +89,8 @@
       categoryFlow: shared.getRadioValue(refs.categoryFlowRadios, current.home_category_flow || 'single_line'),
       defaultCategory: shared.getPreviewInputValue(refs.homeDefaultCategorySelect, current.home_default_category || ''),
       ...cardSettings,
-      wallpaper: (() => {
-        const custom = shared.normalizePreviewUrl(shared.getPreviewInputValue(refs.customWallpaperInput, current.layout_custom_wallpaper || ''));
-        if (custom) return custom;
-        // 壁纸按桌面卡片风格取默认值（唯一数据源：wallpaper-defaults）
-        const style = document.querySelector('#desktopCardSettingsPanel .card-style-btn.active')?.dataset?.style
-          || current.layout_card_style
-          || 'style1';
-        return ns.wallpaper?.resolveWallpaperUrl?.('', style)
-          || window.IoriWallpaperDefaults?.resolveWallpaperUrl?.('', style)
-          || '';
-      })(),
+      wallpaper,
+      usesDefaultStyle1Wallpaper: !customWallpaper && desktopCardStyle === 'style1',
       bgBlur: !!refs.bgBlurSwitch?.checked,
       bgBlurIntensity: shared.getPreviewInputValueOrDefault(refs.bgBlurIntensityRange, current.layout_bg_blur_intensity, '0'),
       titleFont: shared.getPreviewInputValue(refs.homeTitleFontInput, current.home_title_font || ''),
@@ -391,7 +392,9 @@
     root.classList.toggle('category-above-search', settings.categoryPosition === 'above_search');
     root.classList.toggle('category-below-search', settings.categoryPosition === 'below_search');
     root.classList.toggle('is-mobile-preview', isMobilePreview);
+    root.classList.toggle('uses-card-style-1', settings.cardStyle === 'style1');
     root.classList.toggle('uses-card-style-3', settings.cardStyle === 'style3');
+    root.classList.toggle('uses-default-style1-wallpaper', settings.usesDefaultStyle1Wallpaper);
     searchInput?.classList.toggle('search-frosted-glass-effect', settings.searchFrosted && settings.cardStyle !== 'style3');
     if (!isMobilePreview) root.classList.remove('mobile-menu-open');
     const fallbackGridCols = isMobilePreview ? 3 : 4;

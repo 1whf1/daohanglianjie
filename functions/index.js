@@ -7,7 +7,7 @@ import { renderHorizontalMenu, renderVerticalMenu } from './lib/menu-renderer';
 import { renderSiteCards, renderEmptyState } from './lib/card-renderer';
 import { buildCardHydrationState } from './lib/card-model';
 import { ensureSchemaReady } from './lib/schema-migration';
-import { resolveWallpaperUrl } from './lib/wallpaper-defaults';
+import { getStyleDefaultWallpaper, resolveWallpaperUrl } from './lib/wallpaper-defaults';
 
 // 模板内容在 Worker 运行时实例生命周期内不变（部署会替换实例），缓存避免每次 MISS 重复 ASSETS.fetch
 let cachedTemplateHtml = null;
@@ -223,6 +223,9 @@ export async function onRequest(context) {
   // 自定义壁纸优先；留空时使用当前桌面卡片风格的默认壁纸
   const resolvedWallpaperUrl = resolveWallpaperUrl(S.layout_custom_wallpaper, S.layout_card_style);
   const isCustomWallpaper = Boolean(resolvedWallpaperUrl);
+  const usesMobileDefaultStyle1Wallpaper = S.mobile_layout_card_style === 'style1'
+    && !String(S.layout_custom_wallpaper || '').trim()
+    && resolvedWallpaperUrl === getStyleDefaultWallpaper('style1');
   const themeClass = isCustomWallpaper ? 'custom-wallpaper' : '';
 
   // === 8. 计算主题样式 ===
@@ -586,6 +589,7 @@ export async function onRequest(context) {
   const pageStyleClasses = [
     S.layout_card_style === 'style3' ? 'desktop-page-style3' : '',
     S.mobile_layout_card_style === 'style3' ? 'mobile-page-style3' : '',
+    usesMobileDefaultStyle1Wallpaper ? 'mobile-default-style1-wallpaper' : '',
     `category-pos-${categoryPosition}`,
   ].filter(Boolean).join(' ');
   html = html.replace(
