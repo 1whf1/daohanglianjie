@@ -132,7 +132,10 @@ test('home uses style default wallpaper when custom wallpaper is empty', async (
     { key: 'layout_custom_wallpaper', value: 'https://example.com/custom-bg.jpg' },
   ]);
 
-  assert.match(style1Html, /src="https:\/\/img\.peapix\.com\/dc6e559cacb14f9c83b46d5a7f189bab_1920\.jpg"/);
+  assert.match(style1Html, /src="https:\/\/example\.com\/image\/guofeng-white-blue\.png"/);
+  assert.match(style1Html, /wallpaper-loading/);
+  assert.match(style1Html, /body\.wallpaper-loading #app-scroll/);
+  assert.match(style1Html, /image\.addEventListener\('load', reveal/);
   assert.match(style2Html, /src="https:\/\/img\.peapix\.com\/1f4688b7a0d64bda9c508f9498b04f49_1920\.jpg"/);
   assert.match(style3Html, /src="https:\/\/main\.ssss\.nyc\.mn\/background\.webp"/);
   assert.match(style3Html, /custom-wallpaper/);

@@ -430,15 +430,39 @@ export async function onRequest(context) {
   }
 
   // 背景层 HTML
-  const safeWallpaperUrl = sanitizeUrl(resolvedWallpaperUrl);
+  // 默认壁纸可使用同源静态资源路径；输出前解析为绝对 URL，继续沿用统一的 URL 安全校验。
+  const wallpaperUrl = resolvedWallpaperUrl.startsWith('/')
+    ? new URL(resolvedWallpaperUrl, url.origin).href
+    : resolvedWallpaperUrl;
+  const safeWallpaperUrl = sanitizeUrl(wallpaperUrl);
   const defaultBgColor = '#fdf8f3';
   let bgLayerHtml = '';
   if (safeWallpaperUrl) {
     const blurStyle = S.layout_enable_bg_blur ? `filter: blur(${S.layout_bg_blur_intensity}px); transform: scale(1.02);` : '';
-    bgLayerHtml = `<div id="fixed-background" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -9999; pointer-events: none; overflow: hidden;"><img src="${safeWallpaperUrl}" alt="" fetchpriority="high" style="width: 100%; height: 100%; object-fit: cover; ${blurStyle}" /></div>`;
+    bgLayerHtml = `<div id="fixed-background" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -9999; pointer-events: none; overflow: hidden; background-color: ${defaultBgColor};"><img src="${safeWallpaperUrl}" alt="" fetchpriority="high" style="width: 100%; height: 100%; object-fit: cover; ${blurStyle}" /></div>`;
   } else {
     bgLayerHtml = `<div id="fixed-background" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -9999; pointer-events: none; background-color: ${defaultBgColor};"></div>`;
   }
+
+  // 首屏同步显示：网络较慢时先隐藏内容，等壁纸完成加载后一起显示；失败时最多等待 4 秒后回退到底色。
+  const wallpaperLoadingClass = safeWallpaperUrl ? 'wallpaper-loading' : '';
+  const wallpaperReadyScript = safeWallpaperUrl ? `<script>
+    (function () {
+      var image = document.querySelector('#fixed-background img');
+      var reveal = function () {
+        document.body.classList.remove('wallpaper-loading');
+        document.body.classList.add('wallpaper-ready');
+      };
+      if (!image) {
+        reveal();
+        return;
+      }
+      image.addEventListener('load', reveal, { once: true });
+      image.addEventListener('error', reveal, { once: true });
+      if (image.complete && image.naturalWidth > 0) reveal();
+      window.setTimeout(reveal, 4000);
+    })();
+  </script>` : '';
 
   // 壁纸预加载
   if (safeWallpaperUrl) {
@@ -448,7 +472,9 @@ export async function onRequest(context) {
   // 全局滚动样式
   headInjections += `<style>
     html, body { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
-    #app-scroll { width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+    #app-scroll { width: 100%; height: 100%; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; transition: opacity 0.2s ease; }
+    body.wallpaper-loading #app-scroll { opacity: 0; visibility: hidden; }
+    body.wallpaper-ready #app-scroll { opacity: 1; visibility: visible; }
     body { background-color: transparent !important; }
     #fixed-background { transition: background-color 0.3s ease, filter 0.3s ease; }
     @supports (-webkit-touch-callout: none) { #fixed-background { height: -webkit-fill-available; } }
@@ -559,7 +585,7 @@ export async function onRequest(context) {
   ].filter(Boolean).join(' ');
   html = html.replace(
     '<body class="bg-secondary-50 font-sans text-gray-800">',
-    `<body class="bg-secondary-50 dark:bg-gray-900 font-sans text-gray-800 dark:text-gray-100 relative ${isCustomWallpaper ? 'custom-wallpaper' : ''} ${pageStyleClasses}">${bgLayerHtml}<div id="app-scroll">`
+    `<body class="bg-secondary-50 dark:bg-gray-900 font-sans text-gray-800 dark:text-gray-100 relative ${isCustomWallpaper ? 'custom-wallpaper' : ''} ${pageStyleClasses} ${wallpaperLoadingClass}">${bgLayerHtml}${wallpaperReadyScript}<div id="app-scroll">`
   );
   html = html.replace('</body>', '</div></body>');
 
